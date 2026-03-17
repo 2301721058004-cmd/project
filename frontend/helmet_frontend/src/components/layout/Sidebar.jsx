@@ -23,6 +23,7 @@ const ADMIN_LINKS = [
   { to: '/admin/cameras', label: 'Cameras', icon: Camera },
   { to: '/admin/supervisors', label: 'Supervisors', icon: Users },
   { to: '/admin/violations', label: 'Violations', icon: AlertTriangle },
+  { to: '/admin/daily-violations', label: 'Daily Report', icon: Database },
   { to: '/admin/gallery', label: 'Gallery', icon: ImageIcon },
   { to: '/admin/zone-detections', label: 'Zone Results', icon: MapPin },
   { to: '/home', label: 'Detection', icon: Search },

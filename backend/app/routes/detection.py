@@ -5,7 +5,7 @@ import os
 import base64
 import requests
 import numpy as np
-from flask import Blueprint, request, send_from_directory, current_app, session
+from flask import Blueprint, request, send_from_directory, current_app, session, Response
 from werkzeug.utils import secure_filename
 from app.models.detection import DetectionEvent
 from app.models.daily_summary import DailySummary
@@ -150,6 +150,14 @@ def _process_video(upload_path, filename, zone_id, camera_id, user_id):
         if not result['success']:
             return error_response(f"Detection failed: {result.get('error', 'Unknown error')}")
         
+        # Check if output video was created
+        if not os.path.exists(output_path):
+            print(f"[WARNING] Output video file not found at: {output_path}")
+            print(f"[WARNING] Detection folder: {current_app.config['DETECTION_FOLDER']}")
+        else:
+            file_size = os.path.getsize(output_path)
+            print(f"[INFO] Video file exists: {output_path} ({file_size} bytes)")
+        
         # Create detection event in database
         detection_event = DetectionEvent.create_detection(
             camera_id=camera_id,
@@ -185,13 +193,17 @@ def _process_video(upload_path, filename, zone_id, camera_id, user_id):
         return success_response(data={
             'detection': detection_event,
             'video_url': f"/api/detection/video/{output_filename}",
+            'video_exists': os.path.exists(output_path),
             'violation_image_url': f"/api/detection/image/{result.get('violation_image_path')}" if result.get('violation_image_path') else None,
             'violation_frames': [f"/api/detection/image/{frame}" for frame in result.get('violation_frames_paths', [])],
+            'violation_count': len(result.get('violation_frames_paths', [])),
             'stats': {
                 'total_frames': result['total_frames'],
                 'processed_frames': result['processed_frames'],
                 'frames_with_violations': result.get('frames_with_violations', 0),
-                'average_violations_per_frame': result.get('average_violations_per_frame', 0)
+                'average_violations_per_frame': result.get('average_violations_per_frame', 0),
+                'people_detected': result.get('people_count', 0),
+                'violations_count': result.get('violations_count', 0)
             }
         }, message='Video detection completed')
         
@@ -392,7 +404,7 @@ def serve_image(filename):
 
 @detection_bp.route('/video/<filename>', methods=['GET'])
 def serve_video(filename):
-    """Serve detection result videos"""
+    """Serve detection result videos with range request support"""
     try:
         filepath = os.path.join(current_app.config['DETECTION_FOLDER'], filename)
         
@@ -404,10 +416,54 @@ def serve_video(filename):
             print(f"[ERROR] Video not found: {filepath}")
             return error_response('Video not found', 404)
         
+        # Get file size
+        file_size = os.path.getsize(filepath)
+        
+        # Handle range requests for video seeking
+        range_header = request.headers.get('Range')
+        if range_header:
+            try:
+                # Parse range header (e.g., "bytes=0-1023")
+                range_match = range_header.split('=')[1].split('-')
+                start = int(range_match[0])
+                end = int(range_match[1]) if range_match[1] else file_size - 1
+                
+                # Validate range
+                if start > end or start >= file_size:
+                    return error_response('Invalid range', 416)
+                
+                # Read the requested range
+                with open(filepath, 'rb') as f:
+                    f.seek(start)
+                    data = f.read(end - start + 1)
+                
+                response = Response(data, status=206, mimetype='video/mp4')
+                response.headers['Content-Range'] = f'bytes {start}-{end}/{file_size}'
+                response.headers['Accept-Ranges'] = 'bytes'
+                response.headers['Content-Length'] = end - start + 1
+                response.headers['Connection'] = 'keep-alive'
+                response.headers['Access-Control-Allow-Origin'] = '*'
+                response.headers['Access-Control-Allow-Credentials'] = 'true'
+                return response
+            except Exception as e:
+                print(f"[ERROR] Range request failed: {e}")
+                # Fall back to regular serving
+                pass
+        
+        # Determine MIME type based on file extension
+        _, ext = os.path.splitext(filename)
+        if ext.lower() in ['.avi']:
+            mimetype = 'video/x-msvideo'
+        elif ext.lower() in ['.mov']:
+            mimetype = 'video/quicktime'
+        else:
+            mimetype = 'video/mp4'  # Default to mp4
+        
         return send_from_directory(
             current_app.config['DETECTION_FOLDER'],
             filename,
-            mimetype='video/mp4'
+            mimetype=mimetype,
+            as_attachment=False
         )
     except Exception as e:
         print(f"[ERROR] Failed to serve video {filename}: {str(e)}")

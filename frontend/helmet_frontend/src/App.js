@@ -24,6 +24,7 @@ import { ManageSupervisors } from './pages/admin/ManageSupervisors';
 import { ViolationHistory } from './pages/admin/ViolationHistory';
 import { AdminGallery } from './pages/admin/AdminGallery';
 import { ZoneDetectionResults } from './pages/admin/ZoneDetectionResults';
+import { DailyViolationHistory } from './pages/admin/DailyViolationHistory';
 
 // Supervisor pages
 import { SupervisorDashboard } from './pages/supervisor/SupervisorDashboard';
@@ -116,6 +117,11 @@ function App() {
             <Route path="/admin/zone-detections" element={
               <ProtectedRoute allowedRoles={['admin', 'supervisor']}>
                 <ZoneDetectionResults />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/daily-violations" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <DailyViolationHistory />
               </ProtectedRoute>
             } />
 

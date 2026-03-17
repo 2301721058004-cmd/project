@@ -121,9 +121,8 @@ class YOLOService:
                     }
                     
                     # Check for violations
-                    # Common classes for helmet detection: 'helmet', 'no-helmet', 'head', 'person'
-                    # We flag 'no-helmet', 'head', or 'person' (if model suggests a person needs a helmet)
-                    violation_classes = ['no_helmet', 'without_helmet', 'head', 'no-helmet', 'No Helmet']
+                    # Only count actual 'no_helmet' or 'without_helmet' detections as violations
+                    violation_classes = ['no_helmet', 'without_helmet', 'no-helmet', 'No Helmet']
                     if class_name in violation_classes and conf > 0.4:
                         detection['is_violation'] = True
                         violations_count += 1
@@ -135,8 +134,8 @@ class YOLOService:
             # Draw annotations
             annotated_image = self._annotate_image(frame.copy(), detections)
             
-            # Count people
-            people_count = sum(1 for d in detections if d.get('class', '').lower() in ['person', 'head', 'helmet', 'no_helmet', 'without_helmet', 'no-helmet'])
+            # Count people (both with and without helmets)
+            people_count = sum(1 for d in detections if d.get('class', '').lower() in ['person', 'helmet', 'head', 'no_helmet', 'without_helmet', 'no-helmet'])
             
             return {
                 'success': True,
@@ -200,6 +199,26 @@ class YOLOService:
             height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
             total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
             
+            # Validate and fix video properties
+            if fps == 0 or fps is None:
+                fps = 30  # Default to 30 fps if not detected
+            if width == 0 or height == 0:
+                print(f"[WARNING] Invalid video dimensions: {width}x{height}")
+                cap.release()
+                return {
+                    'success': False,
+                    'error': 'Invalid video dimensions',
+                    'detections': [],
+                    'has_violation': False,
+                    'violations_count': 0,
+                    'total_frames': 0,
+                    'processed_frames': 0
+                }
+            
+            # Ensure dimensions are even (required for most codecs)
+            width = width if width % 2 == 0 else width - 1
+            height = height if height % 2 == 0 else height - 1
+            
             # Set confidence threshold
             if conf_threshold is None:
                 conf_threshold = current_app.config.get('YOLO_CONFIDENCE_THRESHOLD', 0.25) if current_app else 0.25
@@ -207,8 +226,39 @@ class YOLOService:
             # Setup video writer if output path is provided
             writer = None
             if output_path:
-                fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-                writer = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
+                # Try different codecs in order of browser HTML5 compatibility
+                codecs_to_try = [
+                    ('mp4v', 'mp4v - MPEG4'),  # Most compatible with HTML5 video
+                    ('MJPG', 'MJPG - Motion JPEG'), 
+                    ('XVID', 'XVID - MPEG4'),
+                    ('DIVX', 'DIVX - MPEG4'),
+                ]
+                
+                writer_initialized = False
+                for fourcc_code, description in codecs_to_try:
+                    try:
+                        if fourcc_code.isupper():
+                            fourcc = cv2.VideoWriter_fourcc(*fourcc_code)
+                        else:
+                            fourcc = cv2.VideoWriter_fourcc(*fourcc_code)
+                        
+                        test_writer = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
+                        
+                        if test_writer.isOpened():
+                            writer = test_writer
+                            print(f"[INFO] Video writer initialized with {description}: {output_path}")
+                            writer_initialized = True
+                            break
+                        else:
+                            test_writer.release()
+                            print(f"[WARNING] Codec {description} not available")
+                    except Exception as e:
+                        print(f"[WARNING] Failed to initialize codec {description}: {e}")
+                        continue
+                
+                if not writer_initialized:
+                    print(f"[WARNING] Could not initialize video writer with any codec, will skip video output")
+                    writer = None
             
             all_detections = []
             violations_count = 0
@@ -263,7 +313,8 @@ class YOLOService:
                         }
                         
                         # Check for violations
-                        if class_name in ['no_helmet', 'without_helmet', 'head', 'person'] and conf > 0.5:
+                        # Only count actual 'no_helmet' or 'without_helmet' detections as violations
+                        if class_name in ['no_helmet', 'without_helmet'] and conf > 0.5:
                             detection['is_violation'] = True
                             frame_violations += 1
                         else:
@@ -324,6 +375,10 @@ class YOLOService:
                            (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
                 
                 if writer:
+                    # Ensure frame dimensions match writer expectations
+                    frame_height, frame_width = annotated_frame.shape[:2]
+                    if frame_width != width or frame_height != height:
+                        annotated_frame = cv2.resize(annotated_frame, (width, height))
                     writer.write(annotated_frame)
             
             # Release resources
@@ -339,31 +394,58 @@ class YOLOService:
             violation_frames_paths = []  # List of all violation frame paths
             
             if has_violation and 'max_frame' in violation_frames_data:
-                violation_frame, _, frame_num = violation_frames_data['max_frame']
-                violation_image_filename = f"vio_{os.path.basename(output_path or video_path).split('.')[0]}_frame{frame_num}.jpg"
-                violation_image_path = os.path.join(
-                    current_app.config['DETECTION_FOLDER'], 
-                    violation_image_filename
-                ) if current_app else None
-                
-                if violation_image_path:
-                    cv2.imwrite(violation_image_path, violation_frame)
+                try:
+                    violation_frame, _, frame_num = violation_frames_data['max_frame']
+                    violation_image_filename = f"vio_{os.path.basename(output_path or video_path).split('.')[0]}_frame{frame_num}.jpg"
+                    violation_image_path = os.path.join(
+                        current_app.config['DETECTION_FOLDER'], 
+                        violation_image_filename
+                    ) if current_app else None
+                    
+                    if violation_image_path:
+                        success = cv2.imwrite(violation_image_path, violation_frame)
+                        if success:
+                            print(f"[INFO] Saved main violation frame: {violation_image_filename}")
+                        else:
+                            print(f"[WARNING] Failed to save main violation frame")
+                            violation_image_path = None
+                except Exception as e:
+                    print(f"[ERROR] Error saving main violation frame: {e}")
+                    violation_image_path = None
             
             # Save UNIQUE violation frames as individual detection results
             if unique_violation_frames:
                 base_filename = os.path.basename(output_path or video_path).split('.')[0]
                 for idx, violation_data in enumerate(unique_violation_frames):
-                    frame_num = violation_data['frame_num']
-                    annotated_frame = violation_data['annotated_frame']
-                    frame_filename = f"frame_{base_filename}_f{frame_num}_v{idx+1}.jpg"
-                    frame_path = os.path.join(
-                        current_app.config['DETECTION_FOLDER'], 
-                        frame_filename
-                    ) if current_app else None
-                    
-                    if frame_path:
-                        cv2.imwrite(frame_path, annotated_frame)
-                        violation_frames_paths.append(frame_filename)
+                    try:
+                        frame_num = violation_data['frame_num']
+                        annotated_frame = violation_data['annotated_frame']
+                        frame_filename = f"frame_{base_filename}_f{frame_num}_v{idx+1}.jpg"
+                        frame_path = os.path.join(
+                            current_app.config['DETECTION_FOLDER'], 
+                            frame_filename
+                        ) if current_app else None
+                        
+                        if frame_path:
+                            success = cv2.imwrite(frame_path, annotated_frame)
+                            if success:
+                                violation_frames_paths.append(frame_filename)
+                                print(f"[INFO] Saved violation frame: {frame_filename}")
+                            else:
+                                print(f"[WARNING] Failed to save violation frame: {frame_filename}")
+                    except Exception as e:
+                        print(f"[ERROR] Error saving violation frame {idx}: {e}")
+                        continue
+            
+            # Verify video file was created
+            video_exists = False
+            video_size = 0
+            if output_path and os.path.exists(output_path):
+                video_exists = True
+                video_size = os.path.getsize(output_path)
+                print(f"[INFO] Video file created: {output_path} ({video_size} bytes)")
+            else:
+                print(f"[WARNING] Video file not created or not found: {output_path}")
             
             # Get just the filename for return (not full path)
             violation_image_filename = None
@@ -374,8 +456,8 @@ class YOLOService:
                 'success': True,
                 'detections': all_detections,
                 'has_violation': has_violation,
-                'violations_count': len(unique_violation_frames),  # Count of UNIQUE violations
-                'people_count': len(unique_violation_frames),  # Each unique violation = 1 person
+                'violations_count': max_violations_per_frame,  # Count violations in worst frame
+                'people_count': max_people_per_frame,  # Use max people in any single frame
                 'total_frames': total_frames,
                 'processed_frames': processed_frames,
                 'output_video_path': output_path,

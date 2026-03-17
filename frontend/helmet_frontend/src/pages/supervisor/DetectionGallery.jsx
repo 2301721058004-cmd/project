@@ -193,7 +193,17 @@ export function DetectionGallery() {
                     <div className="relative h-48 bg-gray-200 overflow-hidden group">
                       {detection.file_type === 'video' ? (
                         <>
-                          <video className="w-full h-full object-cover" />
+                          <video 
+                            className="w-full h-full object-cover" 
+                            src={api.detection.getVideoUrl(detection.annotated_image_path)}
+                            controls={false}
+                            controlsList="nodownload"
+                            crossOrigin="anonymous"
+                            muted
+                            onError={(e) => {
+                              console.error('Thumbnail video error:', detection.annotated_image_path, e.target.error);
+                            }}
+                          />
                           <div className="absolute inset-0 bg-black opacity-30 group-hover:opacity-50 transition-opacity duration-300" />
                           <div className="absolute inset-0 flex items-center justify-center">
                             <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center opacity-90 group-hover:opacity-100 transition-opacity">
@@ -208,12 +218,9 @@ export function DetectionGallery() {
                             alt="Detection"
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                             onError={(e) => {
-                              console.error('Failed to load image:', detection.annotated_image_path, api.detection.getImageUrl(detection.annotated_image_path));
+                              console.error('Failed to load image:', detection.annotated_image_path);
                               e.target.style.display = 'none';
                               e.target.parentElement.innerHTML = '<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#e5e7eb; color:#9ca3af;"><span>Failed to load</span></div>';
-                            }}
-                            onLoad={(e) => {
-                              console.log('Image loaded successfully:', detection.annotated_image_path);
                             }}
                           />
                           <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
@@ -314,8 +321,21 @@ export function DetectionGallery() {
                   <div className="bg-gray-100 rounded-lg border border-gray-300 overflow-hidden">
                     <video
                       controls
-                      className="w-full max-h-96"
+                      autoPlay={false}
                       controlsList="nodownload"
+                      className="w-full max-h-96"
+                      crossOrigin="anonymous"
+                      onError={(e) => {
+                        console.error('Video error:', e.target.error);
+                        console.error('Video error code:', e.target.error?.code);
+                        console.error('Video error message:', e.target.error?.message);
+                      }}
+                      onLoadedMetadata={() => {
+                        console.log('Video metadata loaded successfully');
+                      }}
+                      onCanPlay={() => {
+                        console.log('Video can play');
+                      }}
                     >
                       <source
                         src={api.detection.getVideoUrl(selectedDetection.annotated_image_path)}
@@ -324,6 +344,9 @@ export function DetectionGallery() {
                       Your browser does not support the video tag.
                     </video>
                   </div>
+                  <p className="text-xs text-gray-500 mt-2">
+                    Video URL: {api.detection.getVideoUrl(selectedDetection.annotated_image_path)}
+                  </p>
                 </div>
               ) : selectedDetection.annotated_image_path ? (
                 <div>
