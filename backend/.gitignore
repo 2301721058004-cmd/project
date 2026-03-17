@@ -1,0 +1,6 @@
+venv/
+__pycache__/
+.env              # ← This hides your credentials from Git
+uploads/
+detections/
+*.pyc
