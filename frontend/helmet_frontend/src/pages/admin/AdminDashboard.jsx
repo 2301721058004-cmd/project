@@ -77,14 +77,7 @@ export function AdminDashboard() {
   }
 
   return (
-    <div className="relative min-h-screen mesh-gradient-bg bg-grid-pattern overflow-hidden">
-      {/* Dynamic Background Elements */}
-      <div className="scanning-line" />
-      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-orange-200/30 rounded-full blur-[140px] animate-pulse-soft" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-orange-300/20 rounded-full blur-[120px] animate-pulse-soft" style={{ animationDelay: '3s' }} />
-      <div className="absolute top-[30%] right-[15%] w-48 h-48 bg-orange-100/40 rounded-full blur-[60px] animate-float" />
-      <div className="absolute bottom-[20%] left-[10%] w-32 h-32 bg-orange-200/20 rounded-full blur-[50px] animate-float" style={{ animationDelay: '1s' }} />
-
+    <div className="relative min-h-screen overflow-hidden">
       <div className="relative z-10 p-8">
         {/* Header */}
         <div className="mb-10">
@@ -102,23 +95,7 @@ export function AdminDashboard() {
         {error && <Alert type="error" message={error} className="mb-8" />}
 
         {/* Key Metrics Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {/* Total Detections */}
-          <div className="glass-card-premium rounded-3xl p-6 hover:translate-y-[-5px] transition-all duration-500 group shine-effect cursor-default">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-2xl group-hover:scale-110 transition-transform duration-500">
-                🔍
-              </div>
-              <div className="h-1.5 w-12 bg-gray-100 rounded-full overflow-hidden">
-                <div className="h-full bg-orange-500 rounded-full w-2/3 shadow-[0_0_8px_rgba(249,115,22,0.5)]" />
-              </div>
-            </div>
-            <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">People Detected</p>
-            <p className="text-3xl font-black text-gray-800 tracking-tight">
-              {stats.total_detections.toLocaleString()}
-            </p>
-          </div>
-
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {/* Violations */}
           <div className="glass-card-premium rounded-3xl p-6 hover:translate-y-[-5px] transition-all duration-500 group shine-effect cursor-default">
             <div className="flex items-center justify-between mb-4">
@@ -195,31 +172,6 @@ export function AdminDashboard() {
             </div>
           </div>
 
-          {/* Detection Success Rate */}
-          <div className="glass-card-premium rounded-3xl p-8 shine-effect">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="p-3 bg-blue-500/20 rounded-2xl">
-                <span className="text-2xl">🎯</span>
-              </div>
-              <h3 className="text-lg font-bold text-gray-800">Scan Activity</h3>
-            </div>
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-3xl font-black text-blue-600">{stats.total_scans_processed?.toLocaleString() || 0}</span>
-                  <span className="text-[10px] font-black text-gray-400 uppercase">Total Scans</span>
-                </div>
-                <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-blue-400 to-blue-600 rounded-full shadow-lg shadow-blue-200 transition-all duration-1000"
-                    style={{ width: `100%` }}
-                  />
-                </div>
-              </div>
-              <p className="text-xs text-gray-500 mt-4">Images and video frames analyzed</p>
-            </div>
-          </div>
-
           {/* Active Cameras */}
           <div className="glass-card-premium rounded-3xl p-8 shine-effect">
             <div className="flex items-center gap-4 mb-6">
@@ -256,7 +208,10 @@ export function AdminDashboard() {
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie
-                    data={chartData.violation_ratio}
+                    data={chartData.violation_ratio.map(entry => {
+                      const { fill, ...rest } = entry;
+                      return rest;
+                    })}
                     cx="50%"
                     cy="50%"
                     labelLine={false}
@@ -265,9 +220,10 @@ export function AdminDashboard() {
                     fill="#8884d8"
                     dataKey="value"
                   >
-                    {chartData.violation_ratio.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.fill} />
-                    ))}
+                    {chartData.violation_ratio.map((entry, index) => {
+                      const isViolation = entry.name && (entry.name.toLowerCase().includes('violation') || entry.name.toLowerCase().includes('violat') || entry.name.toLowerCase().includes('no helmet'));
+                      return <Cell key={`cell-${index}`} fill={isViolation ? '#f97316' : '#9ca3af'} />;
+                    })}
                   </Pie>
                   <Tooltip formatter={(value) => value.toLocaleString()} />
                 </PieChart>
@@ -295,8 +251,8 @@ export function AdminDashboard() {
                     formatter={(value) => value.toLocaleString()}
                   />
                   <Legend />
-                  <Bar dataKey="violations" fill="#ef4444" radius={[8, 8, 0, 0]} />
-                  <Bar dataKey="detections" fill="#3b82f6" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="violations" fill="#f97316" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="detections" fill="#9ca3af" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             ) : (
@@ -304,34 +260,6 @@ export function AdminDashboard() {
                 <p>No zone data available</p>
               </div>
             )}
-          </div>
-        </div>
-
-        {/* Compliance Trend Card */}
-        <div className="glass-card-premium rounded-3xl p-8 shine-effect mb-12">
-          <h3 className="text-lg font-bold text-gray-800 mb-8 flex items-center gap-3">
-            <span className="text-2xl">📉</span> System Health Overview
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white/50 rounded-2xl p-6">
-              <p className="text-xs text-gray-500 font-bold uppercase tracking-widest mb-2">Total People</p>
-              <p className="text-4xl font-black text-blue-600">{stats.total_detections.toLocaleString()}</p>
-              <p className="text-xs text-gray-400 mt-3">Detected across zones</p>
-            </div>
-            <div className="bg-white/50 rounded-2xl p-6">
-              <p className="text-xs text-gray-500 font-bold uppercase tracking-widest mb-2">Helmet Usage Rate</p>
-              <p className="text-4xl font-black text-emerald-600">{stats.compliance_rate}%</p>
-              <p className="text-xs text-gray-400 mt-3">Overall safety compliance</p>
-            </div>
-            <div className="bg-white/50 rounded-2xl p-6">
-              <p className="text-xs text-gray-500 font-bold uppercase tracking-widest mb-2">No Helmet Rate</p>
-              <p className="text-4xl font-black text-orange-600">
-                {stats.total_detections > 0
-                  ? ((stats.total_violations / stats.total_detections) * 100).toFixed(1)
-                  : 0}%
-              </p>
-              <p className="text-xs text-gray-400 mt-3">Of total people detected</p>
-            </div>
           </div>
         </div>
 
@@ -347,11 +275,6 @@ export function AdminDashboard() {
                 <AlertTriangle className="text-white w-6 h-6" />
               </div>
               <h2 className="text-2xl font-black text-gray-800 tracking-tight">Recent Violations</h2>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-black text-orange-600 bg-orange-50 px-4 py-1.5 rounded-full uppercase tracking-widest border border-orange-100">
-                Live AI Stream
-              </span>
             </div>
           </div>
 

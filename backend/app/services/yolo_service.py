@@ -121,11 +121,12 @@ class YOLOService:
                     }
                     
                     # Check for violations
-                    # Only count actual 'no_helmet' or 'without_helmet' detections as violations
-                    violation_classes = ['no_helmet', 'without_helmet', 'no-helmet', 'No Helmet']
-                    if class_name in violation_classes and conf > 0.4:
+                    # Class 0: head (violation), Class 1: helmet (safe)
+                    if class_name.lower() in ['head', 'no_helmet', 'without_helmet', 'no-helmet'] and conf > 0.3:
                         detection['is_violation'] = True
                         violations_count += 1
+                    elif class_name.lower() in ['helmet']:
+                         detection['is_violation'] = False
                     else:
                         detection['is_violation'] = False
                     
@@ -134,7 +135,7 @@ class YOLOService:
             # Draw annotations
             annotated_image = self._annotate_image(frame.copy(), detections)
             
-            # Count people (both with and without helmets)
+            # Count people/instances (both with and without helmets)
             people_count = sum(1 for d in detections if d.get('class', '').lower() in ['person', 'helmet', 'head', 'no_helmet', 'without_helmet', 'no-helmet'])
             
             return {
@@ -313,8 +314,8 @@ class YOLOService:
                         }
                         
                         # Check for violations
-                        # Only count actual 'no_helmet' or 'without_helmet' detections as violations
-                        if class_name in ['no_helmet', 'without_helmet'] and conf > 0.5:
+                        # Class 0: head (violation), Class 1: helmet (safe)
+                        if class_name.lower() in ['head', 'no_helmet', 'without_helmet', 'no-helmet'] and conf > 0.3:
                             detection['is_violation'] = True
                             frame_violations += 1
                         else:

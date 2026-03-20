@@ -7,7 +7,7 @@ export function Signup() {
     full_name: '',
     email: '',
     company: '',
-    role: '',
+    role: 'admin',
     password: '',
     confirmPassword: '',
     agreeToTerms: false,
@@ -93,7 +93,7 @@ export function Signup() {
           Create Account
         </h2>
         <p className="text-gray-500 text-center text-sm mb-6">
-          Register for construction site monitoring access
+          Register as a company owner to manage your construction site monitoring
         </p>
 
         {/* Error */}
@@ -170,31 +170,6 @@ export function Signup() {
                 placeholder="Construction Company Ltd."
                 className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all text-gray-700 text-sm"
               />
-            </div>
-          </div>
-
-          {/* Role */}
-          <div>
-            <label className="block text-gray-700 text-sm font-medium mb-1.5">
-              Role
-            </label>
-            <div className="relative">
-              <select
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                required
-                className="w-full pl-4 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all text-gray-700 text-sm appearance-none"
-              >
-                <option value="">Select your role</option>
-                <option value="admin">Admin</option>
-                <option value="supervisor">Supervisor</option>
-              </select>
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </span>
             </div>
           </div>
 

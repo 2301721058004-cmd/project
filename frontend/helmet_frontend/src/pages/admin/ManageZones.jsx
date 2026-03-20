@@ -11,6 +11,8 @@ export function ManageZones() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [editingId, setEditingId] = useState(null);
+  const [editData, setEditData] = useState({ name: '', location: '' });
 
   useEffect(() => {
     fetchZones();
@@ -51,6 +53,28 @@ export function ManageZones() {
     }
   };
 
+  const handleEditZone = (zone) => {
+    setEditingId(zone.id);
+    setEditData({ name: zone.name, location: zone.location });
+  };
+
+  const handleUpdateZone = async (e) => {
+    e.preventDefault();
+    try {
+      await api.admin.updateZone(editingId, editData);
+      setSuccess('Zone updated successfully');
+      setEditingId(null);
+      fetchZones();
+    } catch (err) {
+      setError('Failed to update zone');
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setEditData({ name: '', location: '' });
+  };
+
   if (loading) return <div className="p-8">Loading...</div>;
 
   return (
@@ -89,17 +113,48 @@ export function ManageZones() {
         ) : (
           <div className="space-y-4">
             {zones.map((zone) => (
-              <div key={zone.id} className="flex items-center justify-between p-4 border rounded">
-                <div>
-                  <h3 className="font-semibold">{zone.name}</h3>
-                  <p className="text-sm text-gray-600">{zone.location}</p>
-                  <p className="text-xs text-gray-500">
-                    {zone.cameras?.length || 0} cameras, {zone.supervisors?.length || 0} supervisors
-                  </p>
-                </div>
-                <Button variant="danger" size="sm" onClick={() => handleDeleteZone(zone.id)}>
-                  Delete
-                </Button>
+              <div key={zone.id}>
+                {editingId === zone.id ? (
+                  <form onSubmit={handleUpdateZone} className="p-4 border rounded bg-gray-50">
+                    <div className="space-y-4">
+                      <InputField
+                        name="name"
+                        placeholder="Zone Name"
+                        value={editData.name}
+                        onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                        required
+                      />
+                      <InputField
+                        name="location"
+                        placeholder="Location"
+                        value={editData.location}
+                        onChange={(e) => setEditData({ ...editData, location: e.target.value })}
+                      />
+                      <div className="flex gap-2">
+                        <Button type="submit" variant="success" size="sm">Save</Button>
+                        <Button type="button" variant="outline" size="sm" onClick={handleCancelEdit}>Cancel</Button>
+                      </div>
+                    </div>
+                  </form>
+                ) : (
+                  <div className="flex items-center justify-between p-4 border rounded">
+                    <div>
+                      <h3 className="font-semibold">{zone.name}</h3>
+                      <p className="text-sm text-gray-600">{zone.location}</p>
+                      <p className="text-xs text-gray-500">
+                        {zone.cameras?.length || 0} cameras, {zone.supervisors?.length || 0} supervisors
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button variant="primary" size="sm" onClick={() => handleEditZone(zone)}>
+                        Edit
+                      </Button>
+                      <Button variant="danger" size="sm" onClick={() => handleDeleteZone(zone.id)}>
+                        Delete
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>

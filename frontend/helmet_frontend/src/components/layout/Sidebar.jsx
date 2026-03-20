@@ -14,7 +14,11 @@ import {
   Database,
   ChevronRight,
   ShieldAlert,
-  Zap
+  Zap,
+  Settings,
+  Info,
+  HelpCircle,
+  Video
 } from 'lucide-react';
 
 const ADMIN_LINKS = [
@@ -22,20 +26,21 @@ const ADMIN_LINKS = [
   { to: '/admin/zones', label: 'Zones', icon: MapPin },
   { to: '/admin/cameras', label: 'Cameras', icon: Camera },
   { to: '/admin/supervisors', label: 'Supervisors', icon: Users },
+  { to: '/admin/live-monitor', label: 'Live Monitor', icon: Video },
   { to: '/admin/violations', label: 'Violations', icon: AlertTriangle },
-  { to: '/admin/daily-violations', label: 'Daily Report', icon: Database },
   { to: '/admin/gallery', label: 'Gallery', icon: ImageIcon },
-  { to: '/admin/zone-detections', label: 'Zone Results', icon: MapPin },
-  { to: '/home', label: 'Detection', icon: Search },
+  { to: '/admin/about', label: 'About', icon: Info },
+  { to: '/admin/faq', label: 'FAQ', icon: HelpCircle },
 ];
 
 const SUPERVISOR_LINKS = [
   { to: '/supervisor/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/supervisor/zones', label: 'My Zones', icon: MapPin },
+  { to: '/supervisor/live-monitor', label: 'Live Monitor', icon: Video },
   { to: '/supervisor/gallery', label: 'Gallery', icon: ImageIcon },
   { to: '/supervisor/history', label: 'History', icon: ClipboardList },
-  { to: '/admin/zone-detections', label: 'Zone Results', icon: MapPin },
-  { to: '/home', label: 'Detection', icon: Search },
+  { to: '/supervisor/about', label: 'About', icon: Info },
+  { to: '/supervisor/faq', label: 'FAQ', icon: HelpCircle },
 ];
 
 export function Sidebar() {
@@ -142,36 +147,7 @@ export function Sidebar() {
           </nav>
         </div>
 
-        {/* System Intelligence */}
-        <div className="pt-6 border-t border-orange-50">
-          <p className="text-[10px] font-extrabold text-orange-400 uppercase tracking-[0.25em] mb-6 px-4">
-            AI Intelligence
-          </p>
 
-          <div className="space-y-4 px-2">
-            {[
-              { label: 'Vision Engine', sub: 'Neural Processing', icon: Activity, status: 'Active' },
-              { label: 'Data Stream', sub: 'Cloud Syncing', icon: Database, status: 'Ready' },
-              { label: 'Safety Shield', sub: 'Real-time Guard', icon: ShieldAlert, status: 'Live' }
-            ].map((stat, i) => (
-              <div key={i} className="group flex items-center justify-between p-3 rounded-2xl hover:bg-orange-50/50 transition-all duration-300 border border-transparent hover:border-orange-100/50">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 bg-white shadow-sm rounded-xl group-hover:scale-110 transition-transform duration-300 border border-orange-50">
-                    <stat.icon className="w-4 h-4 text-orange-500" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-gray-700">{stat.label}</p>
-                    <p className="text-[9px] text-gray-400 font-medium uppercase tracking-tighter">{stat.sub}</p>
-                  </div>
-                </div>
-                <div className="flex flex-col items-center gap-1">
-                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                  <span className="text-[8px] font-black text-emerald-600 uppercase tracking-tighter">{stat.status}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
 
       {/* Footer Card */}

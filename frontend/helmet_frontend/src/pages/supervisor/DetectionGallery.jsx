@@ -417,7 +417,7 @@ export function DetectionGallery() {
               )}
 
               {/* Violation Frames Gallery (for videos) */}
-              {selectedDetection.file_type === 'video' && selectedDetection.extra_data?.violation_frames_paths && selectedDetection.extra_data.violation_frames_paths.length > 0 && (
+              {selectedDetection.extra_data?.violation_frames_paths && selectedDetection.extra_data.violation_frames_paths.length > 0 && (
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-4">
                     Violation Frames ({selectedDetection.extra_data.violation_frames_paths.length})

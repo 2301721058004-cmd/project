@@ -140,25 +140,18 @@ def _process_video(upload_path, filename, zone_id, camera_id, user_id):
                         camera_name = cam.get('name', 'Unknown').replace(' ', '_')
                         break
         
-        # Generate output video filename with zone and camera name
-        output_filename = f"det_{zone_name}_{camera_name}_{filename}"
-        output_path = os.path.join(current_app.config['DETECTION_FOLDER'], output_filename)
+        # Run detection on video (pass output_path=None to skip generating an annotated video)
+        result = yolo_service.detect_video(upload_path, output_path=None, frame_skip=5)
         
-        # Run detection on video (process every 5th frame for speed)
-        result = yolo_service.detect_video(upload_path, output_path, frame_skip=5)
+        # We no longer need the annotated video file, as the user wants results as violated frames only.
+        # This saves significant processing time and storage.
         
         if not result['success']:
             return error_response(f"Detection failed: {result.get('error', 'Unknown error')}")
         
-        # Check if output video was created
-        if not os.path.exists(output_path):
-            print(f"[WARNING] Output video file not found at: {output_path}")
-            print(f"[WARNING] Detection folder: {current_app.config['DETECTION_FOLDER']}")
-        else:
-            file_size = os.path.getsize(output_path)
-            print(f"[INFO] Video file exists: {output_path} ({file_size} bytes)")
-        
         # Create detection event in database
+        # We intentionally save this as 'image' so the UI displays the violation frames 
+        # and doesn't attempt to load a missing video player.
         detection_event = DetectionEvent.create_detection(
             camera_id=camera_id,
             zone_id=zone_id,
@@ -166,9 +159,9 @@ def _process_video(upload_path, filename, zone_id, camera_id, user_id):
             violations_count=result['violations_count'],
             people_count=result['people_count'],
             detections=result['detections'],
-            annotated_image_path=output_filename,
+            annotated_image_path=result.get('violation_image_path'),
             uploaded_by=user_id,
-            file_type='video',
+            file_type='image',
             camera_name=camera_name,
             zone_name=zone_name,
             extra_data={
@@ -192,8 +185,7 @@ def _process_video(upload_path, filename, zone_id, camera_id, user_id):
         
         return success_response(data={
             'detection': detection_event,
-            'video_url': f"/api/detection/video/{output_filename}",
-            'video_exists': os.path.exists(output_path),
+            'video_exists': False,
             'violation_image_url': f"/api/detection/image/{result.get('violation_image_path')}" if result.get('violation_image_path') else None,
             'violation_frames': [f"/api/detection/image/{frame}" for frame in result.get('violation_frames_paths', [])],
             'violation_count': len(result.get('violation_frames_paths', [])),

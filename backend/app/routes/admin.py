@@ -152,6 +152,32 @@ def delete_zone(zone_id):
     except Exception as e:
         return error_response(str(e), 500)
 
+@admin_bp.route('/zones/<zone_id>', methods=['PUT'])
+@admin_required
+def update_zone(zone_id):
+    """Update zone"""
+    try:
+        data = request.get_json()
+        
+        if not data.get('name'):
+            return error_response('Zone name is required')
+        
+        zone = Zone.update_zone(zone_id, {
+            'name': data['name'],
+            'location': data.get('location', '')
+        })
+        
+        if not zone:
+            return error_response('Zone not found', 404)
+        
+        return success_response(
+            data={'zone': zone},
+            message='Zone updated successfully'
+        )
+        
+    except Exception as e:
+        return error_response(str(e), 500)
+
 @admin_bp.route('/zones/<zone_id>/cameras', methods=['POST'])
 @admin_required
 def add_camera(zone_id):

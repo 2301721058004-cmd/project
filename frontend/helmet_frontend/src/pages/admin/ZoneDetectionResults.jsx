@@ -337,7 +337,7 @@ export function ZoneDetectionResults() {
                 )}
 
                 {/* Violation Frames Gallery (for videos) */}
-                {selectedDetection.file_type === 'video' && selectedDetection.extra_data?.violation_frames_paths && selectedDetection.extra_data.violation_frames_paths.length > 0 && (
+                {selectedDetection.extra_data?.violation_frames_paths && selectedDetection.extra_data.violation_frames_paths.length > 0 && (
                   <div>
                     <p className="text-sm text-gray-600 mb-2">
                       Violation Frames ({selectedDetection.extra_data.violation_frames_paths.length})

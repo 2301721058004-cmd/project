@@ -114,6 +114,20 @@ class Zone:
             return False
     
     @staticmethod
+    def update_zone(zone_id, update_data):
+        try:
+            result = mongo.db.zones.find_one_and_update(
+                {'_id': ObjectId(zone_id)},
+                {'$set': update_data},
+                return_document=True
+            )
+            if result:
+                return Zone.serialize_zone(result)
+            return None
+        except:
+            return None
+    
+    @staticmethod
     def serialize_zone(zone):
         if not zone:
             return None

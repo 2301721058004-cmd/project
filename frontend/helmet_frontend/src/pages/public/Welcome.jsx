@@ -46,13 +46,6 @@ const Welcome = () => {
     }
   ];
 
-  const steps = [
-    { num: "01", title: "Admin Setup", desc: "Create zones and add cameras" },
-    { num: "02", title: "Assign Supervisors", desc: "Allocate zones to supervisors" },
-    { num: "03", title: "Upload Images", desc: "Supervisors upload site photos" },
-    { num: "04", title: "AI Analysis", desc: "Automatic detection and alerts" }
-  ];
-
   return (
     <div className="min-h-screen bg-gray-900">
       {/* Hero Section */}
@@ -117,22 +110,6 @@ const Welcome = () => {
           {/* Stats */}
           <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
             <div className="text-center">
-              <p className="text-3xl font-bold text-white">90%</p>
-              <p className="text-gray-400 text-sm">Accuracy</p>
-            </div>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-white">&lt;1s</p>
-              <p className="text-gray-400 text-sm">Detection Speed</p>
-            </div>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-white">24/7</p>
-              <p className="text-gray-400 text-sm">Monitoring</p>
-            </div>
-          </div>
-
-          {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
               <p className="text-3xl font-bold text-white">99%</p>
               <p className="text-gray-400 text-sm">Accuracy</p>
             </div>
@@ -145,13 +122,6 @@ const Welcome = () => {
               <p className="text-gray-400 text-sm">Monitoring</p>
             </div>
           </div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <svg className="w-6 h-6 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
         </div>
 
         {/* Scroll Indicator */}
@@ -185,117 +155,6 @@ const Welcome = () => {
                 <p className="text-gray-400 leading-relaxed">{feature.desc}</p>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="py-24 px-4 bg-gray-800/50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">How It Works</h2>
-            <p className="text-gray-400">Simple 4-step process to secure your construction site</p>
-          </div>
-
-          <div className="grid md:grid-cols-4 gap-8">
-            {steps.map((step, idx) => (
-              <div key={idx} className="relative text-center">
-                <div className="text-6xl font-bold text-gray-700 mb-4">{step.num}</div>
-                <h3 className="text-xl font-semibold text-white mb-2">{step.title}</h3>
-                <p className="text-gray-400 text-sm">{step.desc}</p>
-                {idx < 3 && (
-                  <div className="hidden md:block absolute top-8 right-0 transform translate-x-1/2">
-                    <svg className="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Two Portals Section */}
-      <section className="py-24 px-4 bg-gray-900">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Choose Your Portal</h2>
-            <p className="text-gray-400">Different dashboards for different responsibilities</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Admin Portal */}
-            <div
-              className="group relative bg-gradient-to-br from-indigo-900/80 to-purple-900/80 p-10 rounded-3xl border border-indigo-500/30 hover:border-indigo-400 transition-all duration-300 cursor-pointer overflow-hidden"
-              onClick={() => navigate('/login')}
-            >
-              <div className="absolute inset-0 bg-indigo-600/10 group-hover:bg-indigo-600/20 transition"></div>
-              <div className="relative z-10">
-                <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-4">Admin Portal</h3>
-                <ul className="text-indigo-200 space-y-3 mb-8">
-                  <li className="flex items-center gap-2">
-                    <span className="text-green-400">✓</span> Create & manage zones
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-green-400">✓</span> Add cameras to zones
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-green-400">✓</span> Manage supervisors
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-green-400">✓</span> View all violations
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-green-400">✓</span> System-wide analytics
-                  </li>
-                </ul>
-                <button className="w-full py-3 bg-white text-indigo-900 rounded-xl font-semibold hover:bg-gray-100 transition">
-                  Login as Admin
-                </button>
-              </div>
-            </div>
-
-            {/* Supervisor Portal */}
-            <div
-              className="group relative bg-gradient-to-br from-orange-600/80 to-red-600/80 p-10 rounded-3xl border border-orange-500/30 hover:border-orange-400 transition-all duration-300 cursor-pointer overflow-hidden"
-              onClick={() => navigate('/login')}
-            >
-              <div className="absolute inset-0 bg-orange-600/10 group-hover:bg-orange-600/20 transition"></div>
-              <div className="relative z-10">
-                <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-4">Supervisor Portal</h3>
-                <ul className="text-orange-100 space-y-3 mb-8">
-                  <li className="flex items-center gap-2">
-                    <span className="text-green-300">✓</span> View assigned zones
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-green-300">✓</span> Upload site images
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-green-300">✓</span> Real-time detection
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-green-300">✓</span> Zone-specific reports
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-green-300">✓</span> Violation alerts
-                  </li>
-                </ul>
-                <button className="w-full py-3 bg-white text-orange-700 rounded-xl font-semibold hover:bg-gray-100 transition">
-                  Login as Supervisor
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       </section>

@@ -229,7 +229,13 @@ export function AdminGallery() {
                       {detection.has_violation ? 'Violation Detected' : 'Safe Area'}
                     </p>
                     <div className="space-y-1">
-                      <p className="text-xs text-gray-600">
+                      <p className="text-xs text-gray-700 font-semibold">
+                        🎥 {detection.camera_name || 'Unknown Camera'}
+                      </p>
+                      <p className="text-xs text-gray-700 font-semibold">
+                        📍 {detection.zone_name || 'Unknown Zone'}
+                      </p>
+                      <p className="text-xs text-gray-600 mt-2">
                         <span className="font-semibold">{detection.violations_count}</span> person(s) detected
                       </p>
                       <p className="text-xs text-gray-500">
@@ -261,7 +267,10 @@ export function AdminGallery() {
                       <p className="font-semibold text-gray-800">
                         {detection.has_violation ? 'Safety Violation' : 'Safe Detection'}
                       </p>
-                      <p className="text-sm text-gray-600 font-semibold">
+                      <p className="text-xs text-gray-700 font-semibold mt-1">
+                        🎥 {detection.camera_name || 'Unknown Camera'} • 📍 {detection.zone_name || 'Unknown Zone'}
+                      </p>
+                      <p className="text-sm text-gray-600 font-semibold mt-1">
                         {formatDateWithTimezone(detection.timestamp, timezone, 'datetime')}
                       </p>
                     </div>
@@ -345,6 +354,16 @@ export function AdminGallery() {
                 </div>
 
                 <div className="bg-gray-50 p-4 rounded-lg">
+                  <p className="text-sm text-gray-600 mb-1">🎥 Camera</p>
+                  <p className="text-lg font-bold text-gray-800">{selectedDetection.camera_name || 'Unknown'}</p>
+                </div>
+
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <p className="text-sm text-gray-600 mb-1">📍 Zone</p>
+                  <p className="text-lg font-bold text-gray-800">{selectedDetection.zone_name || 'Unknown'}</p>
+                </div>
+
+                <div className="bg-gray-50 p-4 rounded-lg">
                   <p className="text-sm text-gray-600 mb-1">File Type</p>
                   <p className="text-xl font-bold text-gray-800">{selectedDetection.file_type.toUpperCase()}</p>
                 </div>
@@ -378,7 +397,7 @@ export function AdminGallery() {
               )}
 
               {/* Violation Frames Gallery (for videos) */}
-              {selectedDetection.file_type === 'video' && selectedDetection.extra_data?.violation_frames_paths && selectedDetection.extra_data.violation_frames_paths.length > 0 && (
+              {selectedDetection.extra_data?.violation_frames_paths && selectedDetection.extra_data.violation_frames_paths.length > 0 && (
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-4">
                     Violation Frames ({selectedDetection.extra_data.violation_frames_paths.length})

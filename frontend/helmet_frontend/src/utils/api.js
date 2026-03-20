@@ -52,6 +52,10 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(zoneData),
     }),
+    updateZone: (zoneId, zoneData) => fetchWithAuth(`/admin/zones/${zoneId}`, {
+      method: 'PUT',
+      body: JSON.stringify(zoneData),
+    }),
     deleteZone: (zoneId) => fetchWithAuth(`/admin/zones/${zoneId}`, {
       method: 'DELETE',
     }),
@@ -107,6 +111,10 @@ export const api = {
     getViolations: (filters = {}) => {
       const params = new URLSearchParams(filters).toString();
       return fetchWithAuth(`/detection/violations?${params}`);
+    },
+    getRecentViolations: (filters = {}) => {
+      const params = new URLSearchParams(filters).toString();
+      return fetchWithAuth(`/detection/recent-violations?${params}`);
     },
     getImageUrl: (filename) => `${API_BASE_URL}/detection/image/${filename}`,
     getVideoUrl: (filename) => `${API_BASE_URL}/detection/video/${filename}`,

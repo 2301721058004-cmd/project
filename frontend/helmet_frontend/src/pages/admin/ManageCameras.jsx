@@ -10,7 +10,7 @@ export function ManageCameras() {
   const navigate = useNavigate();
   const [zones, setZones] = useState([]);
   const [selectedZone, setSelectedZone] = useState('');
-  const [newCamera, setNewCamera] = useState({ name: '', location: '', rtsp_url: '' });
+  const [newCamera, setNewCamera] = useState({ name: '', location: '' });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -49,7 +49,7 @@ export function ManageCameras() {
 
     try {
       await api.admin.addCamera(selectedZone, newCamera);
-      setNewCamera({ name: '', location: '', rtsp_url: '' });
+      setNewCamera({ name: '', location: '' });
       setSuccess('Camera added successfully');
       fetchZones();
     } catch (err) {
@@ -167,19 +167,6 @@ export function ManageCameras() {
               value={newCamera.location}
               onChange={(e) => setNewCamera({ ...newCamera, location: e.target.value })}
             />
-
-            <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2">Stream/IP URL</label>
-              <InputField
-                name="rtsp_url"
-                placeholder="RTSP or HTTP (e.g. http://192.168.1.5:8080/shot.jpg)"
-                value={newCamera.rtsp_url}
-                onChange={(e) => setNewCamera({ ...newCamera, rtsp_url: e.target.value })}
-              />
-              <p className="text-[10px] text-gray-400 mt-1">
-                For mobile IP Webcams, use the <b>shot.jpg</b> URL for best real-time performance.
-              </p>
-            </div>
           </div>
 
           <div className="flex justify-end">

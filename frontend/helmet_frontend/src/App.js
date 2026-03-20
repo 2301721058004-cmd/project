@@ -23,18 +23,23 @@ import { ManageCameras } from './pages/admin/ManageCameras';
 import { ManageSupervisors } from './pages/admin/ManageSupervisors';
 import { ViolationHistory } from './pages/admin/ViolationHistory';
 import { AdminGallery } from './pages/admin/AdminGallery';
-import { ZoneDetectionResults } from './pages/admin/ZoneDetectionResults';
-import { DailyViolationHistory } from './pages/admin/DailyViolationHistory';
+import { AdminSettings } from './pages/admin/AdminSettings';
+import { AdminAbout } from './pages/admin/AdminAbout';
+import { AdminFAQ } from './pages/admin/AdminFAQ';
 
 // Supervisor pages
 import { SupervisorDashboard } from './pages/supervisor/SupervisorDashboard';
 import { ZoneMonitor } from './pages/supervisor/ZoneMonitor';
 import { DetectionHistory } from './pages/supervisor/DetectionHistory';
 import { DetectionGallery } from './pages/supervisor/DetectionGallery';
+import { SupervisorSettings } from './pages/supervisor/SupervisorSettings';
+import { SupervisorAbout } from './pages/supervisor/SupervisorAbout';
+import { SupervisorFAQ } from './pages/supervisor/SupervisorFAQ';
 
 // Shared pages
 import { Home } from './pages/Home';
 import { Profile } from './pages/shared/Profile';
+import { LiveMonitor } from './pages/shared/LiveMonitor';
 
 import { useLocation } from 'react-router-dom';
 
@@ -114,14 +119,31 @@ function App() {
                 <AdminGallery />
               </ProtectedRoute>
             } />
-            <Route path="/admin/zone-detections" element={
-              <ProtectedRoute allowedRoles={['admin', 'supervisor']}>
-                <ZoneDetectionResults />
+            <Route path="/admin/settings" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminSettings />
               </ProtectedRoute>
             } />
-            <Route path="/admin/daily-violations" element={
+            <Route path="/admin/about" element={
               <ProtectedRoute allowedRoles={['admin']}>
-                <DailyViolationHistory />
+                <AdminAbout />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/faq" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminFAQ />
+              </ProtectedRoute>
+            } />
+
+            {/* Protected routes - Shared (Admin and Supervisor) */}
+            <Route path="/admin/live-monitor" element={
+              <ProtectedRoute allowedRoles={['admin', 'supervisor']}>
+                <LiveMonitor />
+              </ProtectedRoute>
+            } />
+            <Route path="/supervisor/live-monitor" element={
+              <ProtectedRoute allowedRoles={['admin', 'supervisor']}>
+                <LiveMonitor />
               </ProtectedRoute>
             } />
 
@@ -146,13 +168,23 @@ function App() {
                 <DetectionGallery />
               </ProtectedRoute>
             } />
-
-            {/* Shared protected routes */}
-            <Route path="/home" element={
-              <ProtectedRoute>
-                <Home />
+            <Route path="/supervisor/settings" element={
+              <ProtectedRoute allowedRoles={['supervisor', 'admin']}>
+                <SupervisorSettings />
               </ProtectedRoute>
             } />
+            <Route path="/supervisor/about" element={
+              <ProtectedRoute allowedRoles={['supervisor', 'admin']}>
+                <SupervisorAbout />
+              </ProtectedRoute>
+            } />
+            <Route path="/supervisor/faq" element={
+              <ProtectedRoute allowedRoles={['supervisor', 'admin']}>
+                <SupervisorFAQ />
+              </ProtectedRoute>
+            } />
+
+            {/* Shared protected routes */}
             <Route path="/profile" element={
               <ProtectedRoute>
                 <Profile />
