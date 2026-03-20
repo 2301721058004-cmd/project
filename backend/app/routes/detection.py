@@ -118,7 +118,7 @@ def _process_image(upload_path, filename, zone_id, camera_id, user_id):
 
 
 def _process_video(upload_path, filename, zone_id, camera_id, user_id):
-    """Process video upload and detection"""
+    """Process video upload and detection - returns annotated violation frames"""
     try:
         from app.models.zone import Zone
         
@@ -140,18 +140,13 @@ def _process_video(upload_path, filename, zone_id, camera_id, user_id):
                         camera_name = cam.get('name', 'Unknown').replace(' ', '_')
                         break
         
-        # Run detection on video (pass output_path=None to skip generating an annotated video)
+        # Run detection on video - returns violation frames only (no video generation)
         result = yolo_service.detect_video(upload_path, output_path=None, frame_skip=5)
-        
-        # We no longer need the annotated video file, as the user wants results as violated frames only.
-        # This saves significant processing time and storage.
         
         if not result['success']:
             return error_response(f"Detection failed: {result.get('error', 'Unknown error')}")
         
         # Create detection event in database
-        # We intentionally save this as 'image' so the UI displays the violation frames 
-        # and doesn't attempt to load a missing video player.
         detection_event = DetectionEvent.create_detection(
             camera_id=camera_id,
             zone_id=zone_id,
@@ -161,7 +156,7 @@ def _process_video(upload_path, filename, zone_id, camera_id, user_id):
             detections=result['detections'],
             annotated_image_path=result.get('violation_image_path'),
             uploaded_by=user_id,
-            file_type='image',
+            file_type='image',  # Store as image type for consistent frontend display
             camera_name=camera_name,
             zone_name=zone_name,
             extra_data={
@@ -170,7 +165,7 @@ def _process_video(upload_path, filename, zone_id, camera_id, user_id):
                 'frames_with_violations': result.get('frames_with_violations', 0),
                 'average_violations_per_frame': result.get('average_violations_per_frame', 0),
                 'violation_image_path': result.get('violation_image_path'),
-                'violation_frames_paths': result.get('violation_frames_paths', [])  # Store unique violation frames
+                'source': 'video_upload'
             }
         )
         
@@ -180,24 +175,20 @@ def _process_video(upload_path, filename, zone_id, camera_id, user_id):
                 date=datetime.utcnow(),
                 zone_id=zone_id,
                 increment_count=result['violations_count'],
-                frame_path=result.get('violation_image_path')  # Store main violation frame
+                frame_path=result.get('violation_image_path')
             )
         
         return success_response(data={
             'detection': detection_event,
-            'video_exists': False,
-            'violation_image_url': f"/api/detection/image/{result.get('violation_image_path')}" if result.get('violation_image_path') else None,
-            'violation_frames': [f"/api/detection/image/{frame}" for frame in result.get('violation_frames_paths', [])],
-            'violation_count': len(result.get('violation_frames_paths', [])),
+            'image_url': f"/api/detection/image/{result.get('violation_image_path')}" if result.get('violation_image_path') else None,
             'stats': {
                 'total_frames': result['total_frames'],
                 'processed_frames': result['processed_frames'],
                 'frames_with_violations': result.get('frames_with_violations', 0),
-                'average_violations_per_frame': result.get('average_violations_per_frame', 0),
                 'people_detected': result.get('people_count', 0),
                 'violations_count': result.get('violations_count', 0)
             }
-        }, message='Video detection completed')
+        }, message='Video detection completed - violation frame extracted')
         
     except Exception as e:
         return error_response(str(e), 500)

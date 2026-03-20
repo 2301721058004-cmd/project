@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../utils/api';
+import { useSound } from '../../hooks/useSound';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { InputField } from '../../components/ui/InputField';
@@ -8,6 +9,7 @@ import { Alert } from '../../components/ui/Alert';
 
 export function ManageCameras() {
   const navigate = useNavigate();
+  const { playViolationAlert } = useSound();
   const [zones, setZones] = useState([]);
   const [selectedZone, setSelectedZone] = useState('');
   const [newCamera, setNewCamera] = useState({ name: '', location: '' });
@@ -24,6 +26,13 @@ export function ManageCameras() {
   useEffect(() => {
     fetchZones();
   }, []);
+
+  // Play violation alert when violations are detected
+  useEffect(() => {
+    if (detectResult && detectResult.has_violation) {
+      playViolationAlert();
+    }
+  }, [detectResult, playViolationAlert]);
 
   const fetchZones = async () => {
     try {
@@ -94,6 +103,21 @@ export function ManageCameras() {
 
     try {
       const response = await api.detection.upload(formData);
+      
+      // Validate that the image contains human detections
+      const detections = response.detection.detections || [];
+      const hasHumanDetections = detections.some(d => {
+        const className = (d.class || '').toLowerCase();
+        return ['person', 'head', 'helmet', 'no_helmet', 'without_helmet', 'no-helmet'].includes(className);
+      });
+
+      if (!hasHumanDetections) {
+        setError('❌ Invalid image: No humans detected. Please upload an image or video with people wearing or without helmets.');
+        setDetectFile(null);
+        setDetectPreview(null);
+        return;
+      }
+
       setDetectResult({
         ...response.detection,
         camera_name: camera.name,
@@ -344,56 +368,35 @@ export function ManageCameras() {
 
               {detectResult.annotated_image_path && (
                 <div className="space-y-3">
-                  {isImage(detectFile) ? (
-                    <div style={{ overflow: 'hidden', borderRadius: '0.5rem' }}>
-                      <img
-                        src={api.detection.getImageUrl(detectResult.annotated_image_path)}
-                        alt="Detection result"
-                        className="w-full rounded-lg border border-gray-300"
-                        style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
-                      />
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      {detectResult.file_type === 'video' && detectResult.has_violation && detectResult.extra_data?.violation_image_path && (
-                        <div>
-                          <p className="text-sm font-semibold text-gray-700 mb-2">📸 Violation Frame</p>
-                          <div style={{ overflow: 'hidden', borderRadius: '0.5rem', maxHeight: '300px' }}>
-                            <img
-                              src={api.detection.getImageUrl(detectResult.extra_data.violation_image_path)}
-                              alt="Violation frame"
-                              className="w-full rounded-lg border-2 border-red-300"
-                              style={{ display: 'block', maxWidth: '100%', height: 'auto', objectFit: 'contain' }}
-                            />
-                          </div>
-                        </div>
-                      )}
-                      <div>
-                        <p className="text-sm font-semibold text-gray-700 mb-2">🎬 Annotated Video</p>
-                        <p className="text-xs text-gray-500 mb-2">Click the video to expand full screen</p>
-                        <div style={{ overflow: 'hidden', borderRadius: '0.5rem', backgroundColor: '#000', width: '100%', aspectRatio: '16/9', maxHeight: '300px' }}>
-                          <video
-                            src={api.detection.getVideoUrl(detectResult.annotated_image_path)}
-                            controls
-                            className="w-full h-full"
-                            style={{ display: 'block' }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  )}
+                  <p className="text-sm font-semibold text-gray-700">📸 Detection Result</p>
+                  <div style={{ overflow: 'hidden', borderRadius: '0.5rem' }}>
+                    <img
+                      src={api.detection.getImageUrl(detectResult.annotated_image_path)}
+                      alt="Detection result"
+                      className="w-full rounded-lg border border-gray-300"
+                      style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
+                    />
+                  </div>
                 </div>
               )}
 
-              {detectResult.file_type === 'video' && detectResult.extra_data && (
+              {detectResult.extra_data && (
                 <div className="grid grid-cols-2 gap-2 mt-4">
                   <div className="bg-blue-50 p-3 rounded border border-blue-200">
                     <p className="text-xs text-gray-600">Total Frames</p>
                     <p className="text-lg font-bold text-blue-600">{detectResult.extra_data.total_frames}</p>
                   </div>
                   <div className="bg-red-50 p-3 rounded border border-red-200">
-                    <p className="text-xs text-gray-600">Violation Frames</p>
+                    <p className="text-xs text-gray-600">Frames with Violations</p>
                     <p className="text-lg font-bold text-red-600">{detectResult.extra_data.frames_with_violations}</p>
+                  </div>
+                  <div className="bg-purple-50 p-3 rounded border border-purple-200">
+                    <p className="text-xs text-gray-600">Processed Frames</p>
+                    <p className="text-lg font-bold text-purple-600">{detectResult.extra_data.processed_frames}</p>
+                  </div>
+                  <div className="bg-green-50 p-3 rounded border border-green-200">
+                    <p className="text-xs text-gray-600">Violations Count</p>
+                    <p className="text-lg font-bold text-green-600">{detectResult.violations_count}</p>
                   </div>
                 </div>
               )}

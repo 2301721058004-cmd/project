@@ -48,14 +48,12 @@ def create_app(config_name=None):
     from app.routes.supervisor import supervisor_bp
     from app.routes.detection import detection_bp
     from app.routes.daily_summary import daily_summary_bp
-    from app.routes.stream import stream_bp
     
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(admin_bp, url_prefix='/api/admin')
     app.register_blueprint(supervisor_bp, url_prefix='/api/supervisor')
     app.register_blueprint(detection_bp, url_prefix='/api/detection')
     app.register_blueprint(daily_summary_bp, url_prefix='/api/daily-summary')
-    app.register_blueprint(stream_bp, url_prefix='/api/stream')
     
     # Error handlers
     @app.errorhandler(404)

@@ -26,6 +26,7 @@ import { AdminGallery } from './pages/admin/AdminGallery';
 import { AdminSettings } from './pages/admin/AdminSettings';
 import { AdminAbout } from './pages/admin/AdminAbout';
 import { AdminFAQ } from './pages/admin/AdminFAQ';
+import { DailyViolationReport } from './pages/admin/DailyViolationReport';
 
 // Supervisor pages
 import { SupervisorDashboard } from './pages/supervisor/SupervisorDashboard';
@@ -39,7 +40,6 @@ import { SupervisorFAQ } from './pages/supervisor/SupervisorFAQ';
 // Shared pages
 import { Home } from './pages/Home';
 import { Profile } from './pages/shared/Profile';
-import { LiveMonitor } from './pages/shared/LiveMonitor';
 
 import { useLocation } from 'react-router-dom';
 
@@ -134,16 +134,9 @@ function App() {
                 <AdminFAQ />
               </ProtectedRoute>
             } />
-
-            {/* Protected routes - Shared (Admin and Supervisor) */}
-            <Route path="/admin/live-monitor" element={
-              <ProtectedRoute allowedRoles={['admin', 'supervisor']}>
-                <LiveMonitor />
-              </ProtectedRoute>
-            } />
-            <Route path="/supervisor/live-monitor" element={
-              <ProtectedRoute allowedRoles={['admin', 'supervisor']}>
-                <LiveMonitor />
+            <Route path="/admin/daily-violations" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <DailyViolationReport />
               </ProtectedRoute>
             } />
 

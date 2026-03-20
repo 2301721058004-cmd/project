@@ -23,19 +23,15 @@ export function Navbar() {
               <div className="w-11 h-11 bg-gradient-to-tr from-orange-500 to-orange-400 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-200 group-hover:rotate-6 transition-transform duration-500 animate-float">
                 <Shield className="w-6 h-6 text-white" />
               </div>
-              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full animate-pulse" />
             </div>
 
             <div className="hidden md:block transition-all duration-300 group-hover:translate-x-1">
               <h1 className="text-lg font-black text-gray-800 tracking-tight leading-none mb-0.5">
                 SAFETY<span className="text-orange-500">HELMET</span>
               </h1>
-              <div className="flex items-center gap-1.5">
-                <span className="w-1 h-1 bg-orange-500 rounded-full animate-ping" />
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                  AI Guard System
-                </p>
-              </div>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                AI Guard System
+              </p>
             </div>
           </Link>
 

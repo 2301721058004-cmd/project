@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../utils/api';
+import { useSound } from '../../hooks/useSound';
 import { Card } from '../../components/ui/Card';
 import { Alert } from '../../components/ui/Alert';
 import { useAuth } from '../../context/AuthContext';
@@ -17,6 +18,7 @@ export function AdminGallery() {
   const [selectedDetection, setSelectedDetection] = useState(null);
   const [viewMode, setViewMode] = useState('grid'); // 'grid', 'list'
   const { timezone } = useAuth();
+  const { playViolationAlert } = useSound();
 
   useEffect(() => {
     fetchDetections();
@@ -25,6 +27,13 @@ export function AdminGallery() {
   useEffect(() => {
     applyFilters();
   }, [detections, filters]);
+
+  // Play violation alert when a violation detection is selected
+  useEffect(() => {
+    if (selectedDetection && selectedDetection.has_violation) {
+      playViolationAlert();
+    }
+  }, [selectedDetection, playViolationAlert]);
 
   const fetchDetections = async () => {
     try {
@@ -188,22 +197,9 @@ export function AdminGallery() {
                   onClick={() => setSelectedDetection(detection)}
                   className={`rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border-2 ${detection.has_violation ? 'border-red-300' : 'border-green-300'}`}
                 >
-                  {/* Media (Image or Video Thumbnail) */}
+                  {/* Media (Image Thumbnail) */}
                   <div className="relative h-48 bg-gray-200 overflow-hidden group">
-                    {detection.file_type === 'video' ? (
-                      <div className="relative w-full h-full">
-                        <img
-                          src={api.detection.getImageUrl(detection.annotated_image_path)}
-                          alt="Video Thumbnail"
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="bg-black bg-opacity-50 rounded-full p-2 text-white">
-                            ▶️
-                          </div>
-                        </div>
-                      </div>
-                    ) : detection.annotated_image_path ? (
+                    {detection.annotated_image_path ? (
                       <img
                         src={api.detection.getImageUrl(detection.annotated_image_path)}
                         alt="Detection"
@@ -312,18 +308,9 @@ export function AdminGallery() {
             <div className="p-6 space-y-6">
               {/* Media Player */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                  {selectedDetection.file_type === 'video' ? 'Annotated Video' : 'Detection Image'}
-                </h3>
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Detection Result Image</h3>
                 <div className="bg-gray-100 rounded-lg border border-gray-300 overflow-hidden">
-                  {selectedDetection.file_type === 'video' ? (
-                    <video 
-                      src={api.detection.getVideoUrl(selectedDetection.annotated_image_path)}
-                      controls
-                      autoPlay
-                      className="w-full max-h-[500px]"
-                    />
-                  ) : selectedDetection.annotated_image_path ? (
+                  {selectedDetection.annotated_image_path ? (
                     <img
                       src={api.detection.getImageUrl(selectedDetection.annotated_image_path)}
                       alt="Detection result"

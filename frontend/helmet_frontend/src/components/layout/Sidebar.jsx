@@ -18,7 +18,7 @@ import {
   Settings,
   Info,
   HelpCircle,
-  Video
+  BarChart3,
 } from 'lucide-react';
 
 const ADMIN_LINKS = [
@@ -26,8 +26,8 @@ const ADMIN_LINKS = [
   { to: '/admin/zones', label: 'Zones', icon: MapPin },
   { to: '/admin/cameras', label: 'Cameras', icon: Camera },
   { to: '/admin/supervisors', label: 'Supervisors', icon: Users },
-  { to: '/admin/live-monitor', label: 'Live Monitor', icon: Video },
   { to: '/admin/violations', label: 'Violations', icon: AlertTriangle },
+  { to: '/admin/daily-violations', label: 'Daily Report', icon: BarChart3 },
   { to: '/admin/gallery', label: 'Gallery', icon: ImageIcon },
   { to: '/admin/about', label: 'About', icon: Info },
   { to: '/admin/faq', label: 'FAQ', icon: HelpCircle },
@@ -36,7 +36,6 @@ const ADMIN_LINKS = [
 const SUPERVISOR_LINKS = [
   { to: '/supervisor/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/supervisor/zones', label: 'My Zones', icon: MapPin },
-  { to: '/supervisor/live-monitor', label: 'Live Monitor', icon: Video },
   { to: '/supervisor/gallery', label: 'Gallery', icon: ImageIcon },
   { to: '/supervisor/history', label: 'History', icon: ClipboardList },
   { to: '/supervisor/about', label: 'About', icon: Info },
@@ -106,9 +105,7 @@ export function Sidebar() {
                 height: `${indicatorStyle.height}px`,
                 opacity: indicatorStyle.opacity,
               }}
-            >
-              <div className="absolute left-0 top-0 bottom-0 w-1 bg-white rounded-r-full shadow-[0_0_10px_white]" />
-            </div>
+            />
 
             {links.map((link, index) => {
               const Icon = link.icon;
@@ -157,8 +154,7 @@ export function Sidebar() {
           <div className="absolute -left-2 -bottom-2 w-12 h-12 bg-white/10 rounded-full group-hover:scale-125 transition-transform duration-700" />
 
           <div className="relative z-10">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-2 h-2 bg-white rounded-full animate-ping" />
+            <div className="mb-3">
               <span className="text-[10px] font-black text-white/90 uppercase tracking-[0.2em]">v.1.2.4 Premium</span>
             </div>
             <p className="text-xs text-white/80 leading-relaxed font-semibold mb-3">

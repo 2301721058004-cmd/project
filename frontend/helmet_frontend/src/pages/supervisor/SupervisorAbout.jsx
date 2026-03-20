@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card } from '../../components/ui/Card';
-import { Info, Shield, Users, Zap, Globe } from 'lucide-react';
+import { Info, Shield, Users, Zap, Globe, Upload, AlertCircle, TrendingUp, Database } from 'lucide-react';
 
 export function SupervisorAbout() {
   return (
@@ -89,17 +89,89 @@ export function SupervisorAbout() {
             <div className="h-px bg-gray-200"></div>
 
             <div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-3">Get Help</h2>
-              <p className="text-gray-600 mb-3">
-                For support, questions, or reporting issues, please contact your administrator or our support team.
+              <h2 className="text-2xl font-bold text-gray-800 mb-3">System Workflow</h2>
+              <p className="text-gray-600 mb-4 leading-relaxed">
+                Our Safety Helmet Detection System operates in a seamless workflow designed for maximum efficiency and safety compliance. Here's how the system works:
               </p>
-              <div className="flex gap-3">
-                <a href="#" className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition">
-                  Contact Support
-                </a>
-                <a href="#" className="px-4 py-2 border border-orange-500 text-orange-500 rounded-lg hover:bg-orange-50 transition">
-                  View Documentation
-                </a>
+              
+              <div className="space-y-6">
+                {/* Step 1 */}
+                <div>
+                  <div className="flex gap-4 p-4 bg-orange-50 rounded-lg border border-orange-200 mb-2">
+                    <div className="flex-shrink-0">
+                      <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-orange-600 text-white font-bold">1</div>
+                    </div>
+                    <h3 className="font-semibold text-gray-800">📤 Upload Media</h3>
+                  </div>
+                  <p className="text-sm text-gray-600 ml-14">
+                    Upload image or video files from your assigned zones. Select the appropriate camera and drag-and-drop or browse to select your file for analysis.
+                  </p>
+                </div>
+
+                {/* Step 2 */}
+                <div>
+                  <div className="flex gap-4 p-4 bg-blue-50 rounded-lg border border-blue-200 mb-2">
+                    <div className="flex-shrink-0">
+                      <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-blue-600 text-white font-bold">2</div>
+                    </div>
+                    <h3 className="font-semibold text-gray-800">🧠 AI Detection Processing</h3>
+                  </div>
+                  <p className="text-sm text-gray-600 ml-14">
+                    The YOLOv8 deep learning model analyzes your uploaded media to detect people and identify whether they're wearing helmets. System processes frames efficiently with smart frame-skipping for videos.
+                  </p>
+                </div>
+
+                {/* Step 3 */}
+                <div>
+                  <div className="flex gap-4 p-4 bg-purple-50 rounded-lg border border-purple-200 mb-2">
+                    <div className="flex-shrink-0">
+                      <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-purple-600 text-white font-bold">3</div>
+                    </div>
+                    <h3 className="font-semibold text-gray-800">🖼️ Result Display & Annotation</h3>
+                  </div>
+                  <p className="text-sm text-gray-600 ml-14">
+                    System returns a single annotated image highlighting detection results. For videos, the frame with the most violations is extracted. Violations are marked in red, safe detections in green.
+                  </p>
+                </div>
+
+                {/* Step 4 */}
+                <div>
+                  <div className="flex gap-4 p-4 bg-red-50 rounded-lg border border-red-200 mb-2">
+                    <div className="flex-shrink-0">
+                      <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-red-600 text-white font-bold">4</div>
+                    </div>
+                    <h3 className="font-semibold text-gray-800">🔊 Violation Alert Sound</h3>
+                  </div>
+                  <p className="text-sm text-gray-600 ml-14">
+                    If violations are detected, a distinctive 3-beep warning sound automatically plays for immediate awareness. Safe detections remain silent and display green status.
+                  </p>
+                </div>
+
+                {/* Step 5 */}
+                <div>
+                  <div className="flex gap-4 p-4 bg-green-50 rounded-lg border border-green-200 mb-2">
+                    <div className="flex-shrink-0">
+                      <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-green-600 text-white font-bold">5</div>
+                    </div>
+                    <h3 className="font-semibold text-gray-800">💾 Data Storage & Tracking</h3>
+                  </div>
+                  <p className="text-sm text-gray-600 ml-14">
+                    Your detection results are stored in the system with annotated images. Statistics are recorded per camera and zone for comprehensive historical tracking.
+                  </p>
+                </div>
+
+                {/* Step 6 */}
+                <div>
+                  <div className="flex gap-4 p-4 bg-indigo-50 rounded-lg border border-indigo-200 mb-2">
+                    <div className="flex-shrink-0">
+                      <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-indigo-600 text-white font-bold">6</div>
+                    </div>
+                    <h3 className="font-semibold text-gray-800">📊 View History & Trends</h3>
+                  </div>
+                  <p className="text-sm text-gray-600 ml-14">
+                    Access your detection history with detailed analysis. View violation trends, statistics, and historical records to monitor safety compliance over time.
+                  </p>
+                </div>
               </div>
             </div>
           </div>

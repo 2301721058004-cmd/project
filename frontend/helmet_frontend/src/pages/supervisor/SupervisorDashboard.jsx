@@ -171,8 +171,8 @@ export function SupervisorDashboard() {
                     wrapperStyle={{ paddingTop: '20px', fontWeight: 'bold' }}
                     iconType="circle"
                   />
-                  <Bar dataKey="safePeople" name="Safe Compliant" stackId="a" fill="#10B981" radius={[0, 0, 4, 4]} />
-                  <Bar dataKey="violations" name="Violators" stackId="a" fill="#EF4444" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="safePeople" name="Safe Compliant" stackId="a" fill="#9CA3AF" radius={[0, 0, 4, 4]} />
+                  <Bar dataKey="violations" name="Violators" stackId="a" fill="#f97316" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
