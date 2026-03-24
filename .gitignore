@@ -1,0 +1,24 @@
+# Node modules
+node_modules/
+
+# Electron build output
+dist/
+
+# Environment variables
+.env
+.env.local
+
+# React build
+frontend/helmet_frontend/build/
+frontend/helmet_frontend/node_modules/
+
+# Log files
+*.log
+app.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/

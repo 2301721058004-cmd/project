@@ -99,12 +99,7 @@ export function AdminDashboard() {
           {/* Violations */}
           <div className="glass-card-premium rounded-3xl p-6 hover:translate-y-[-5px] transition-all duration-500 group shine-effect cursor-default">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-2xl group-hover:scale-110 transition-transform duration-500">
-                ⚠️
-              </div>
-              <div className="h-1.5 w-12 bg-gray-100 rounded-full overflow-hidden">
-                <div className="h-full bg-red-500 rounded-full w-1/3 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
-              </div>
+             
             </div>
             <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">No Helmet (Violators)</p>
             <p className="text-3xl font-black text-gray-800 tracking-tight">
@@ -115,12 +110,9 @@ export function AdminDashboard() {
           {/* Active Zones */}
           <div className="glass-card-premium rounded-3xl p-6 hover:translate-y-[-5px] transition-all duration-500 group shine-effect cursor-default">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-2xl group-hover:scale-110 transition-transform duration-500">
-                📍
-              </div>
-              <div className="h-1.5 w-12 bg-gray-100 rounded-full overflow-hidden">
-                <div className="h-full bg-emerald-500 rounded-full w-3/4 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-              </div>
+              
+                
+              
             </div>
             <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">Active Zones</p>
             <p className="text-3xl font-black text-gray-800 tracking-tight">
@@ -131,12 +123,7 @@ export function AdminDashboard() {
           {/* Supervisors */}
           <div className="glass-card-premium rounded-3xl p-6 hover:translate-y-[-5px] transition-all duration-500 group shine-effect cursor-default">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-2xl group-hover:scale-110 transition-transform duration-500">
-                👥
-              </div>
-              <div className="h-1.5 w-12 bg-gray-100 rounded-full overflow-hidden">
-                <div className="h-full bg-blue-500 rounded-full w-1/2 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
-              </div>
+              
             </div>
             <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">Supervisors</p>
             <p className="text-3xl font-black text-gray-800 tracking-tight">
@@ -202,7 +189,7 @@ export function AdminDashboard() {
           {/* Violation vs Safe Pie Chart */}
           <div className="glass-card-premium rounded-3xl p-8 shine-effect">
             <h3 className="text-lg font-bold text-gray-800 mb-8 flex items-center gap-3">
-              <span className="text-2xl">📊</span> People Breakdown
+              <span className="text-2xl"></span> People Breakdown
             </h3>
             {chartData.violation_ratio && chartData.violation_ratio.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
@@ -238,7 +225,7 @@ export function AdminDashboard() {
           {/* Zone-wise Statistics Bar Chart */}
           <div className="glass-card-premium rounded-3xl p-8 shine-effect">
             <h3 className="text-lg font-bold text-gray-800 mb-8 flex items-center gap-3">
-              <span className="text-2xl">📈</span> Zone Performance
+              <span className="text-2xl"></span> Zone Performance
             </h3>
             {chartData.zone_stats && chartData.zone_stats.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
