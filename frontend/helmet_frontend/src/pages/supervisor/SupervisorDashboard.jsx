@@ -36,14 +36,16 @@ export function SupervisorDashboard() {
         // Calculate aggregated totals
         const totalViolations = data.stats?.total_violations || 0;
         const totalDetections = data.stats?.total_detections || 0;
-        const totalSafePeople = totalDetections - totalViolations;
+        const totalSafePeople = Math.max(0, totalDetections - totalViolations);
+        
+        console.log('Dashboard Data:', { totalDetections, totalViolations, totalSafePeople });
         
         // Create aggregated chart data
         const aggregatedData = [
           {
-            name: 'Safety Summary',
-            safePeople: totalSafePeople,
-            violations: totalViolations
+            name: 'Today',
+            'With Helmet': totalSafePeople,
+            'Without Helmet': totalViolations
           }
         ];
         setChartData(aggregatedData);
@@ -165,8 +167,8 @@ export function SupervisorDashboard() {
                     wrapperStyle={{ paddingTop: '20px', fontWeight: 'bold' }}
                     iconType="circle"
                   />
-                  <Bar dataKey="safePeople" name="Safe (Compliant)" fill="#9CA3AF" radius={[8, 8, 0, 0]} />
-                  <Bar dataKey="violations" name="Violations" fill="#f97316" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="With Helmet" name="With Helmet" fill="#22c55e" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="Without Helmet" name="Without Helmet" fill="#ef4444" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

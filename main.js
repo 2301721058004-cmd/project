@@ -33,7 +33,8 @@ function createWindow() {
 
   log('▶️ Starting React...')
   const react = spawn('C:\\Windows\\System32\\cmd.exe', ['/c', 'npm start'], {
-    cwd: path.join(rootDir, 'frontend', 'helmet_frontend'), // ✅ Fixed!
+    cwd: path.join(rootDir, 'frontend', 'helmet_frontend'),
+    env: { ...process.env, BROWSER: 'none' }, // ✅ Fixed!
     stdio: 'pipe'
   })
   react.stdout.on('data', (d) => log('React: ' + d))

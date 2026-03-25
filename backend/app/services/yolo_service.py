@@ -272,6 +272,10 @@ class YOLOService:
                 if frame_people > max_people_per_frame:
                     max_people_per_frame = frame_people
                 
+                # Track maximum violations in any single frame (most accurate representation)
+                if frame_violations > max_violations_per_frame:
+                    max_violations_per_frame = frame_violations
+                
                 all_detections.extend(frame_detections)
                 
                 # Track frame with maximum violations
@@ -290,8 +294,9 @@ class YOLOService:
             # Release resources
             cap.release()
             
-            # Calculate statistics
-            has_violation = max_violations_per_frame > 0
+            # Calculate statistics - use max violations from worst frame (most accurate)
+            total_violations_overall = max_violations_per_frame
+            has_violation = total_violations_overall > 0
             
             # Extract and save the main violation frame
             violation_image_path = None
@@ -327,14 +332,14 @@ class YOLOService:
                 'success': True,
                 'detections': all_detections,
                 'has_violation': has_violation,
-                'violations_count': max_violations_per_frame,
+                'violations_count': total_violations_overall,  # FIXED: Return total violations, not just max per frame
                 'people_count': max_people_per_frame,
                 'total_frames': total_frames,
                 'processed_frames': processed_frames,
                 'violation_image_path': violation_image_filename,
                 'violation_frames_paths': violation_frames_paths,
                 'frames_with_violations': 1 if has_violation else 0,
-                'average_violations_per_frame': round(max_violations_per_frame / max(processed_frames, 1), 2)
+                'average_violations_per_frame': round(total_violations_overall / max(processed_frames, 1), 2)  # Updated for total violations
             }
         
         except Exception as e:
