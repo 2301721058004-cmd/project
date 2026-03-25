@@ -147,25 +147,6 @@ export function Sidebar() {
 
       </div>
 
-      {/* Footer Card */}
-      <div className="p-6">
-        <div className="relative overflow-hidden bg-gradient-to-br from-orange-500 to-orange-600 rounded-3xl p-5 shadow-lg shadow-orange-200 group">
-          <div className="absolute -right-4 -top-4 w-16 h-16 bg-white/10 rounded-full group-hover:scale-150 transition-transform duration-700" />
-          <div className="absolute -left-2 -bottom-2 w-12 h-12 bg-white/10 rounded-full group-hover:scale-125 transition-transform duration-700" />
-
-          <div className="relative z-10">
-            <div className="mb-3">
-              <span className="text-[10px] font-black text-white/90 uppercase tracking-[0.2em]">v.1.2.4 Premium</span>
-            </div>
-            <p className="text-xs text-white/80 leading-relaxed font-semibold mb-3">
-              Enterprise Safety Suite
-            </p>
-            <div className="h-1.5 w-full bg-white/20 rounded-full overflow-hidden">
-              <div className="h-full bg-white w-3/4 shadow-[0_0_10px_white]" />
-            </div>
-          </div>
-        </div>
-      </div>
     </aside>
   );
 }

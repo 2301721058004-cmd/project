@@ -30,7 +30,7 @@ export function Navbar() {
                 SAFETY<span className="text-orange-500">HELMET</span>
               </h1>
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                AI Guard System
+                AI Monitoring System
               </p>
             </div>
           </Link>

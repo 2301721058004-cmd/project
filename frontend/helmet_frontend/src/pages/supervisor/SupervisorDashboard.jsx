@@ -33,14 +33,20 @@ export function SupervisorDashboard() {
       });
 
       if (data.recent_detections) {
-        // Reverse array to show oldest to newest on graph (left to right)
-        const sortedData = [...data.recent_detections].reverse().map(d => ({
-          time: new Date(d.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          totalPeople: d.people_count || 0,
-          violations: d.violations_count || 0,
-          safePeople: (d.people_count || 0) - (d.violations_count || 0)
-        }));
-        setChartData(sortedData);
+        // Calculate aggregated totals
+        const totalViolations = data.stats?.total_violations || 0;
+        const totalDetections = data.stats?.total_detections || 0;
+        const totalSafePeople = totalDetections - totalViolations;
+        
+        // Create aggregated chart data
+        const aggregatedData = [
+          {
+            name: 'Safety Summary',
+            safePeople: totalSafePeople,
+            violations: totalViolations
+          }
+        ];
+        setChartData(aggregatedData);
       }
 
     } catch (err) {
@@ -53,7 +59,7 @@ export function SupervisorDashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen mesh-gradient-bg">
+      <div className="flex items-center justify-center min-h-screen">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin" />
           <p className="text-orange-600 font-bold animate-pulse">Syncing Safety Stream...</p>
@@ -63,13 +69,7 @@ export function SupervisorDashboard() {
   }
 
   return (
-    <div className="relative min-h-screen mesh-gradient-bg bg-grid-pattern overflow-hidden">
-      {/* Dynamic Background Elements */}
-      <div className="scanning-line" />
-      <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-orange-200/30 rounded-full blur-[140px] animate-pulse-soft" />
-      <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-orange-300/20 rounded-full blur-[120px] animate-pulse-soft" style={{ animationDelay: '3s' }} />
-      <div className="absolute top-[40%] left-[5%] w-32 h-32 bg-orange-100/40 rounded-full blur-[60px] animate-float" />
-
+    <div className="relative min-h-screen overflow-hidden">
       <div className="relative z-10 p-8">
         {/* Header */}
         <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -83,13 +83,7 @@ export function SupervisorDashboard() {
             <p className="text-gray-500 font-medium ml-4">Monitoring {stats.assigned_zones} active safety zones</p>
           </div>
 
-          <div className="glass-card-premium px-6 py-3 rounded-2xl flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">System Status</p>
-            </div>
-            <p className="text-xs font-bold text-emerald-600 uppercase">Operational</p>
-          </div>
+
         </div>
 
         {error && <Alert type="error" message={error} className="mb-8" />}
@@ -126,7 +120,7 @@ export function SupervisorDashboard() {
               <div className="p-3 bg-orange-500 rounded-2xl shadow-xl shadow-orange-200">
                 <Activity className="text-white w-6 h-6" />
               </div>
-              <h2 className="text-2xl font-black text-gray-800 tracking-tight">Neural Safety Demographics</h2>
+              <h2 className="text-2xl font-black text-gray-800 tracking-tight"> Safety Demographics</h2>
             </div>
             <div className="flex items-center gap-2">
               <div className="px-4 py-1.5 bg-orange-50 border border-orange-100 rounded-full">
@@ -151,7 +145,7 @@ export function SupervisorDashboard() {
                 <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
                   <XAxis
-                    dataKey="time"
+                    dataKey="name"
                     axisLine={false}
                     tickLine={false}
                     tick={{ fill: '#6B7280', fontSize: 12, fontWeight: 600 }}
@@ -171,8 +165,8 @@ export function SupervisorDashboard() {
                     wrapperStyle={{ paddingTop: '20px', fontWeight: 'bold' }}
                     iconType="circle"
                   />
-                  <Bar dataKey="safePeople" name="Safe Compliant" stackId="a" fill="#9CA3AF" radius={[0, 0, 4, 4]} />
-                  <Bar dataKey="violations" name="Violators" stackId="a" fill="#f97316" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="safePeople" name="Safe (Compliant)" fill="#9CA3AF" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="violations" name="Violations" fill="#f97316" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
