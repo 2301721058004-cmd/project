@@ -136,7 +136,7 @@ class YOLOService:
             annotated_image = self._annotate_image(frame.copy(), detections)
             
             # Count people/instances (both with and without helmets)
-            people_count = sum(1 for d in detections if d.get('class', '').lower() in ['person', 'helmet', 'head', 'no_helmet', 'without_helmet', 'no-helmet'])
+            people_count = sum(1 for d in detections if d.get('class', '').lower() in ['helmet', 'head', 'no_helmet', 'without_helmet', 'no-helmet'])
             
             return {
                 'success': True,
@@ -268,7 +268,7 @@ class YOLOService:
                         frame_detections.append(detection)
                 
                 # Count people in this frame
-                frame_people = sum(1 for d in frame_detections if d.get('class', '').lower() in ['person', 'head', 'helmet', 'no_helmet', 'without_helmet', 'no-helmet'])
+                frame_people = sum(1 for d in frame_detections if d.get('class', '').lower() in ['head', 'helmet', 'no_helmet', 'without_helmet', 'no-helmet'])
                 if frame_people > max_people_per_frame:
                     max_people_per_frame = frame_people
                 

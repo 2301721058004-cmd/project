@@ -32,20 +32,20 @@ export function SupervisorDashboard() {
         today_violations: data.stats ? data.stats.total_violations : 0
       });
 
-      if (data.recent_detections) {
+      if (data.stats) {
         // Calculate aggregated totals
-        const totalViolations = data.stats?.total_violations || 0;
-        const totalDetections = data.stats?.total_detections || 0;
-        const totalSafePeople = Math.max(0, totalDetections - totalViolations);
+        const totalPeople = data.stats.total_people || 0;
+        const totalViolationsCount = data.stats.total_violations_count || 0;
+        const totalSafePeople = Math.max(0, totalPeople - totalViolationsCount);
         
-        console.log('Dashboard Data:', { totalDetections, totalViolations, totalSafePeople });
+        console.log('Dashboard Data:', { totalPeople, totalViolationsCount, totalSafePeople });
         
         // Create aggregated chart data
         const aggregatedData = [
           {
             name: 'Today',
             'With Helmet': totalSafePeople,
-            'Without Helmet': totalViolations
+            'Without Helmet': totalViolationsCount
           }
         ];
         setChartData(aggregatedData);
@@ -93,17 +93,14 @@ export function SupervisorDashboard() {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           {[
-            { label: 'Assigned Zones', value: stats.assigned_zones, icon: '📍', sub: 'Active Monitoring' },
-            { label: 'Today\'s Detections', value: stats.today_detections, icon: '🔍', sub: ' Scans' },
-            { label: 'Violations Detected', value: stats.today_violations, icon: '⚠️', sub: 'Immediate Actions' },
+            { label: 'Assigned Zones', value: stats.assigned_zones, sub: 'Active Monitoring' },
+            { label: 'Today\'s Detections', value: stats.today_detections, sub: ' Scans' },
+            { label: 'Violations Detected', value: stats.today_violations, sub: 'Immediate Actions' },
           ].map((stat, i) => (
             <div
               key={i}
               className="glass-card-premium rounded-[2.5rem] p-8 hover:translate-y-[-8px] transition-all duration-500 group shine-effect cursor-default"
             >
-              <div className="w-14 h-14 rounded-2xl bg-white shadow-xl shadow-orange-100/50 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform duration-500">
-                {stat.icon}
-              </div>
               <p className="text-gray-400 text-[10px] font-black uppercase tracking-[0.2em] mb-2">{stat.label}</p>
               <p className="text-4xl font-black text-gray-800 tracking-tighter mb-1">{stat.value}</p>
               <p className="text-[10px] font-bold text-orange-400 tracking-wide uppercase">{stat.sub}</p>
@@ -167,8 +164,8 @@ export function SupervisorDashboard() {
                     wrapperStyle={{ paddingTop: '20px', fontWeight: 'bold' }}
                     iconType="circle"
                   />
-                  <Bar dataKey="With Helmet" name="With Helmet" fill="#22c55e" radius={[8, 8, 0, 0]} />
-                  <Bar dataKey="Without Helmet" name="Without Helmet" fill="#ef4444" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="With Helmet" name="With Helmet" fill="#9ca3af" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="Without Helmet" name="Without Helmet" fill="#f97316" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

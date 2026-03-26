@@ -1,0 +1,57 @@
+[
+  {
+    "_id": "69c5760ccc28dcd930ea4d35",
+    "camera_id": "69b68e5ce060735049eb0f2d",
+    "zone_id": "69b68e01e060735049eb0f2c",
+    "camera_name": "cam1",
+    "zone_name": "zone1",
+    "timestamp": "2026-03-26T18:08:12.444000",
+    "has_violation": true,
+    "violations_count": 1,
+    "people_count": 1,
+    "annotated_image_path": "det_zone1_cam1_20260326_233812_79c780ff.jpg",
+    "uploaded_by": "69b68d4fe060735049eb0f2b",
+    "status": "active",
+    "file_type": "image",
+    "extra_data": {}
+  },
+  {
+    "_id": "69c57619cc28dcd930ea4d36",
+    "camera_id": "69b68e5ce060735049eb0f2d",
+    "zone_id": "69b68e01e060735049eb0f2c",
+    "camera_name": "cam1",
+    "zone_name": "zone1",
+    "timestamp": "2026-03-26T18:08:25.187000",
+    "has_violation": true,
+    "violations_count": 1,
+    "people_count": 2,
+    "annotated_image_path": "det_zone1_cam1_20260326_233824_f175c33c.jpg",
+    "uploaded_by": "69b68d4fe060735049eb0f2b",
+    "status": "active",
+    "file_type": "image",
+    "extra_data": {}
+  },
+  {
+    "_id": "69c57644cc28dcd930ea4d37",
+    "camera_id": "69c563ce5efaea058cd980da",
+    "zone_id": "69c563535efaea058cd980d8",
+    "camera_name": "newsupcam",
+    "zone_name": "newsupzone",
+    "timestamp": "2026-03-26T18:09:08.570000",
+    "has_violation": true,
+    "violations_count": 2,
+    "people_count": 4,
+    "annotated_image_path": "vio_20260326_233859_be0fc02e_frame130.jpg",
+    "uploaded_by": "69b68d4fe060735049eb0f2b",
+    "status": "active",
+    "file_type": "image",
+    "extra_data": {
+      "total_frames": 255,
+      "processed_frames": 51,
+      "frames_with_violations": 1,
+      "average_violations_per_frame": 0.04,
+      "violation_image_path": "vio_20260326_233859_be0fc02e_frame130.jpg",
+      "source": "video_upload"
+    }
+  }
+]

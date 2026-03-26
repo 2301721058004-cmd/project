@@ -85,9 +85,7 @@ export function Profile() {
                                         {user?.full_name?.charAt(0).toUpperCase()}
                                     </div>
                                 </div>
-                                <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-emerald-500 border-4 border-white rounded-full flex items-center justify-center">
-                                    <div className="w-2 h-2 bg-white rounded-full animate-ping" />
-                                </div>
+
                             </div>
 
                             <h2 className="text-xl font-bold text-gray-800 mb-1">{user?.full_name}</h2>

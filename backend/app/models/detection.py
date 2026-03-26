@@ -106,18 +106,20 @@ class DetectionEvent:
                 'total_violations': {
                     '$sum': {'$cond': ['$has_violation', 1, 0]}
                 },
-                'total_people': {'$sum': '$violations_count'}
+                'total_people': {'$sum': '$people_count'},
+                'total_violations_count': {'$sum': '$violations_count'}
             }}
         ]
         
         result = list(mongo.db.detections.aggregate(pipeline))
         if result:
             return {
-                'total_detections': result[0]['total_detections'],
-                'total_violations': result[0]['total_violations'],
-                'total_people': result[0]['total_people']
+                'total_detections': result[0].get('total_detections', 0),
+                'total_violations': result[0].get('total_violations', 0),
+                'total_people': result[0].get('total_people', 0),
+                'total_violations_count': result[0].get('total_violations_count', 0)
             }
-        return {'total_detections': 0, 'total_violations': 0, 'total_people': 0}
+        return {'total_detections': 0, 'total_violations': 0, 'total_people': 0, 'total_violations_count': 0}
     
     @staticmethod
     def get_zone_stats(zone_id):

@@ -34,7 +34,7 @@ export function AdminAbout() {
                   <Zap className="w-6 h-6 text-orange-600 flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-gray-700 mb-1">AI-Powered Detection</h3>
-                    <p className="text-sm text-gray-600">YOLOv8 deep learning model with 99% accuracy for helmet detection</p>
+                    <p className="text-sm text-gray-600">YOLOv8 deep learning model with 90% accuracy for helmet detection</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
