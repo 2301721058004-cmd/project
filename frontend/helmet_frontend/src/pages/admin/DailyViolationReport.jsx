@@ -196,16 +196,6 @@ export function DailyViolationReport() {
           </div>
         </div>
 
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 shadow-md">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600 mb-1">Peak Violations</p>
-              <p className="text-3xl font-bold text-yellow-600">{stats.maxViolationsDay}</p>
-            </div>
-            <div className="text-4xl">📈</div>
-          </div>
-        </div>
-
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 shadow-md">
           <div className="flex items-center justify-between">
             <div>
@@ -283,46 +273,7 @@ export function DailyViolationReport() {
             </ResponsiveContainer>
           </Card>
 
-          {/* Table */}
-          <Card title="Daily Violation Details" className="shadow-md">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="bg-gray-100 border-b-2 border-gray-300">
-                    <th className="px-6 py-3 text-left font-bold text-gray-700">Date</th>
-                    <th className="px-6 py-3 text-center font-bold text-gray-700">Violations Count</th>
-                    <th className="px-6 py-3 text-center font-bold text-gray-700">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {dailyData.map((day, index) => (
-                    <tr 
-                      key={index}
-                      className={`border-b ${day.violations > 0 ? 'bg-red-50 hover:bg-red-100' : 'bg-green-50 hover:bg-green-100'} transition`}
-                    >
-                      <td className="px-6 py-4 font-semibold text-gray-800">{day.date}</td>
-                      <td className="px-6 py-4 text-center">
-                        <span className={`inline-block px-4 py-2 rounded-full font-bold ${
-                          day.violations > 0 
-                            ? 'bg-red-200 text-red-700' 
-                            : 'bg-green-200 text-green-700'
-                        }`}>
-                          {day.violations}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        {day.violations > 0 ? (
-                          <span className="text-red-600 font-semibold">⚠️ Violations</span>
-                        ) : (
-                          <span className="text-green-600 font-semibold">✅ Safe</span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </Card>
+
         </>
       ) : (
         <Card>

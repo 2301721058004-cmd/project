@@ -30,22 +30,7 @@ export function AdminFAQ() {
       question: 'How do I reset a supervisor password?',
       answer: 'Go to the Supervisors section in your admin dashboard, find the supervisor you want to manage, and click the reset button. A temporary password can be generated and shared with the supervisor through your preferred communication channel.'
     },
-    {
-      question: 'What is the detection speed?',
-      answer: 'The system can process and analyze images/videos in less than 1 second. For real-time monitoring with live camera feeds, the processing happens continuously with minimal latency.'
-    },
-    {
-      question: 'How are false positives handled?',
-      answer: 'Our AI model has been trained to minimize false positives. The system is continuously improved with new data. If you notice consistent false positives in certain scenarios, you can report them for model refinement.'
-    },
-    {
-      question: 'Is the system GDPR compliant?',
-      answer: 'Yes, our system is designed with privacy and data protection in mind. All data is encrypted both in transit and at rest. We comply with GDPR and other international data protection regulations.'
-    },
-    {
-      question: 'How do I export violation reports?',
-      answer: 'You can export violations in multiple formats from the violation history page. Select the date range, violations, and click Export. Formats include PDF, CSV, and Excel.'
-    }
+
   ];
 
   return (

@@ -94,7 +94,7 @@ export function SupervisorDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           {[
             { label: 'Assigned Zones', value: stats.assigned_zones, icon: '📍', sub: 'Active Monitoring' },
-            { label: 'Today\'s Detections', value: stats.today_detections, icon: '🔍', sub: 'Neural Scans' },
+            { label: 'Today\'s Detections', value: stats.today_detections, icon: '🔍', sub: ' Scans' },
             { label: 'Violations Detected', value: stats.today_violations, icon: '⚠️', sub: 'Immediate Actions' },
           ].map((stat, i) => (
             <div

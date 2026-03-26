@@ -88,7 +88,7 @@ export function AdminDashboard() {
             </h1>
           </div>
           <p className="text-gray-500 font-medium ml-4">
-            Real-time neural safety intelligence
+            Real-time safety intelligence
           </p>
         </div>
 
@@ -162,14 +162,14 @@ export function AdminDashboard() {
           {/* Active Cameras */}
           <div className="glass-card-premium rounded-3xl p-8 shine-effect">
             <div className="flex items-center gap-4 mb-6">
-              <div className="p-3 bg-purple-500/20 rounded-2xl">
+              <div className="p-3 bg-orange-500/20 rounded-2xl">
                 <span className="text-2xl">📹</span>
               </div>
               <h3 className="text-lg font-bold text-gray-800">Active Cameras</h3>
             </div>
             <div className="space-y-4">
               <div>
-                <p className="text-4xl font-black text-purple-600 mb-2">{stats.total_cameras}</p>
+                <p className="text-4xl font-black text-orange-600 mb-2">{stats.total_cameras}</p>
                 <p className="text-xs text-gray-500">Monitoring across {stats.total_zones} zone(s)</p>
               </div>
               <div className="pt-3 border-t border-gray-100">

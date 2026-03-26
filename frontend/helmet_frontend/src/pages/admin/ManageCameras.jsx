@@ -390,9 +390,9 @@ export function ManageCameras() {
                     <p className="text-xs text-gray-600">Frames with Violations</p>
                     <p className="text-lg font-bold text-red-600">{detectResult.extra_data.frames_with_violations}</p>
                   </div>
-                  <div className="bg-purple-50 p-3 rounded border border-purple-200">
+                  <div className="bg-orange-50 p-3 rounded border border-orange-200">
                     <p className="text-xs text-gray-600">Processed Frames</p>
-                    <p className="text-lg font-bold text-purple-600">{detectResult.extra_data.processed_frames}</p>
+                    <p className="text-lg font-bold text-orange-600">{detectResult.extra_data.processed_frames}</p>
                   </div>
                   <div className="bg-green-50 p-3 rounded border border-green-200">
                     <p className="text-xs text-gray-600">Violations Count</p>

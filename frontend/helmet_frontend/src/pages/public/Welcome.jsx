@@ -17,7 +17,7 @@ const Welcome = () => {
     {
       icon: "🎯",
       title: "AI-Powered Detection",
-      desc: "Real-time helmet detection using YOLOv8 deep learning model with 99% accuracy"
+      desc: "Real-time helmet detection using YOLOv8 deep learning model with 90% accuracy"
     },
     {
       icon: "📹",
@@ -95,12 +95,12 @@ const Welcome = () => {
 
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto mt-16">
           <div className="inline-block mb-6 px-4 py-2 bg-orange-500/20 border border-orange-500/50 rounded-full">
-            <span className="text-orange-400 text-sm font-medium">🚀 AI Safety Technology</span>
+            <span className="text-orange-400 text-sm font-medium"> AI Safety Technology</span>
           </div>
 
           <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
             <span className="text-white block">Safety Helmet Detection</span>
-            <span className="text-orange-400 block">Detection System</span>
+            <span className="text-orange-400 block">Monitoring  System</span>
           </h1>
 
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
@@ -110,11 +110,11 @@ const Welcome = () => {
           {/* Stats */}
           <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
             <div className="text-center">
-              <p className="text-3xl font-bold text-white">99%</p>
+              <p className="text-3xl font-bold text-white">90%</p>
               <p className="text-gray-400 text-sm">Accuracy</p>
             </div>
             <div className="text-center">
-              <p className="text-3xl font-bold text-white">&lt;1s</p>
+              <p className="text-3xl font-bold text-white">&lt;5s</p>
               <p className="text-gray-400 text-sm">Detection Speed</p>
             </div>
             <div className="text-center">

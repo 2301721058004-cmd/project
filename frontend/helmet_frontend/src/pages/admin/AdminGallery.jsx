@@ -100,21 +100,7 @@ export function AdminGallery() {
 
       {error && <Alert type="error" message={error} onClose={() => setError('')} />}
 
-      {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-          <p className="text-sm text-gray-600 mb-1">Total Detections</p>
-          <p className="text-3xl font-bold text-orange-600">{stats.total}</p>
-        </div>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-sm text-gray-600 mb-1">System Violations</p>
-          <p className="text-3xl font-bold text-red-600">{stats.violations}</p>
-        </div>
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-          <p className="text-sm text-gray-600 mb-1">Safe Detections</p>
-          <p className="text-3xl font-bold text-green-600">{stats.safe}</p>
-        </div>
-      </div>
+
 
       {/* Controls */}
       <Card className="mb-6">
