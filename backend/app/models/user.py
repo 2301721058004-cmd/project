@@ -15,7 +15,7 @@ class User:
         return re.match(email_regex, email) is not None
     
     @staticmethod
-    def create_user(full_name, email, password, role='supervisor', company=None):
+    def create_user(full_name, email, password, role='supervisor', company=None, admin_id=None):
         # Validate email format
         if not User.validate_email(email):
             return None
@@ -32,6 +32,7 @@ class User:
             'password_hash': password_hash,
             'role': role,
             'company': company,
+            'admin_id': ObjectId(admin_id) if isinstance(admin_id, str) else admin_id,
             'created_at': datetime.utcnow(),
             'is_active': True
         }
@@ -74,15 +75,32 @@ class User:
         return serialized
     
     @staticmethod
-    def get_all_supervisors():
+    def get_all_supervisors(admin_id=None):
         try:
-            supervisors = mongo.db.users.find({'role': 'supervisor'})
+            if admin_id:
+                # Convert to ObjectId if needed
+                admin_obj_id = ObjectId(admin_id) if isinstance(admin_id, str) else admin_id
+                
+                # First, assign any supervisors without admin_id to this admin (backward compatibility)
+                mongo.db.users.update_many(
+                    {'role': 'supervisor', 'admin_id': {'$exists': False}},
+                    {'$set': {'admin_id': admin_obj_id}}
+                )
+                
+                # Get supervisors created by this admin
+                supervisors = mongo.db.users.find({
+                    'role': 'supervisor',
+                    'admin_id': admin_obj_id
+                })
+            else:
+                supervisors = mongo.db.users.find({'role': 'supervisor'})
+            
             result = []
             for s in supervisors:
                 result.append(User.serialize_user(s))
-            return result  # Always returns array, even if empty
-        except:
-            return []  # Return empty array on error
+            return result
+        except Exception as e:
+            return []
     
     @staticmethod
     def update_user(user_id, update_data):
@@ -93,6 +111,10 @@ class User:
                 if password:
                     update_data['password_hash'] = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
                 del update_data['password']
+            
+            # Convert admin_id to ObjectId if provided
+            if 'admin_id' in update_data and isinstance(update_data['admin_id'], str):
+                update_data['admin_id'] = ObjectId(update_data['admin_id'])
             
             update_data['updated_at'] = datetime.utcnow()
             

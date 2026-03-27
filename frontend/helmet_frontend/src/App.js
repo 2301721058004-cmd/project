@@ -31,7 +31,6 @@ import { DailyViolationReport } from './pages/admin/DailyViolationReport';
 // Supervisor pages
 import { SupervisorDashboard } from './pages/supervisor/SupervisorDashboard';
 import { ZoneMonitor } from './pages/supervisor/ZoneMonitor';
-import { DetectionHistory } from './pages/supervisor/DetectionHistory';
 import { DetectionGallery } from './pages/supervisor/DetectionGallery';
 import { SupervisorSettings } from './pages/supervisor/SupervisorSettings';
 import { SupervisorAbout } from './pages/supervisor/SupervisorAbout';
@@ -149,11 +148,6 @@ function App() {
             <Route path="/supervisor/zones" element={
               <ProtectedRoute allowedRoles={['supervisor', 'admin']}>
                 <ZoneMonitor />
-              </ProtectedRoute>
-            } />
-            <Route path="/supervisor/history" element={
-              <ProtectedRoute allowedRoles={['supervisor', 'admin']}>
-                <DetectionHistory />
               </ProtectedRoute>
             } />
             <Route path="/supervisor/gallery" element={

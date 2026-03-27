@@ -6,7 +6,7 @@
   "main": "main.js",
   "scripts": {
     "electron": "electron .",
-    "build-exe": "electron-packager . MyApp --platform=win32 --arch=x64 --out=dist --overwrite"
+    "build-exe": "electron-packager . MyApp --platform=win32 --arch=x64 --out=dist --overwrite --productName=\"Safety Detector\" --icon=icon.ico"
   },
   "devDependencies": {
     "electron": "^41.0.3",

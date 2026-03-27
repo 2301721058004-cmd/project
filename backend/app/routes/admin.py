@@ -45,7 +45,7 @@ def dashboard_stats():
         people_with_helmet = max(0, total_people - people_no_helmet)
         
         zone_count = len(all_zones)
-        supervisor_count = len(User.get_all_supervisors())
+        supervisor_count = len(User.get_all_supervisors(admin_id=session['user_id']))
         total_cameras = sum(len(zone.get('cameras', [])) for zone in all_zones)
         
         # Compliance rate percentage based on people
@@ -209,9 +209,9 @@ def add_camera(zone_id):
 @admin_bp.route('/supervisors', methods=['GET'])
 @admin_required
 def get_supervisors():
-    """Get all supervisors"""
+    """Get all supervisors created by this admin"""
     try:
-        supervisors = User.get_all_supervisors()
+        supervisors = User.get_all_supervisors(admin_id=session['user_id'])
         return success_response(data={'supervisors': supervisors})
     except Exception as e:
         return error_response(str(e), 500)
@@ -235,8 +235,8 @@ def create_supervisor():
         if existing:
             return error_response('Email already registered', 400)
         
-        # Create supervisor
-        supervisor = User.create_user(full_name, email, password, role='supervisor', company=company)
+        # Create supervisor with admin_id
+        supervisor = User.create_user(full_name, email, password, role='supervisor', company=company, admin_id=session['user_id'])
         if not supervisor:
             return error_response('Failed to create supervisor', 400)
         
@@ -249,10 +249,15 @@ def create_supervisor():
 def update_supervisor(supervisor_id):
     """Update supervisor details"""
     try:
-        # Verify supervisor exists
+        # Verify supervisor exists and belongs to this admin
         supervisor = User.get_by_id(supervisor_id)
         if not supervisor:
             return error_response('Supervisor not found', 404)
+        
+        # Check if supervisor belongs to this admin (backward compatibility: allow if no admin_id)
+        supervisor_admin_id = supervisor.get('admin_id')
+        if supervisor_admin_id and str(supervisor_admin_id) != str(session['user_id']):
+            return error_response('Access denied', 403)
         
         data = request.get_json()
         update_data = {}
@@ -274,6 +279,10 @@ def update_supervisor(supervisor_id):
         if 'password' in data and data['password']:
             update_data['password'] = data['password']
         
+        # Assign admin_id if missing (backward compatibility)
+        if not supervisor_admin_id:
+            update_data['admin_id'] = session['user_id']
+        
         if not update_data:
             return error_response('No data to update')
         
@@ -292,10 +301,15 @@ def update_supervisor(supervisor_id):
 def delete_supervisor(supervisor_id):
     """Delete a supervisor"""
     try:
-        # Verify supervisor exists
+        # Verify supervisor exists and belongs to this admin
         supervisor = User.get_by_id(supervisor_id)
         if not supervisor:
             return error_response('Supervisor not found', 404)
+        
+        # Check if supervisor belongs to this admin (backward compatibility: allow if no admin_id)
+        supervisor_admin_id = supervisor.get('admin_id')
+        if supervisor_admin_id and str(supervisor_admin_id) != str(session['user_id']):
+            return error_response('Access denied', 403)
         
         # Auto-unassign supervisor from all zones before deleting
         mongo.db.zones.update_many(
@@ -323,6 +337,20 @@ def assign_supervisor(zone_id):
         
         if not supervisor_id:
             return error_response('Supervisor ID is required')
+        
+        # Verify zone belongs to this admin
+        zone = mongo.db.zones.find_one({'_id': ObjectId(zone_id)})
+        if not zone or str(zone.get('admin_id')) != str(session['user_id']):
+            return error_response('Zone not found or access denied', 404)
+        
+        # Verify supervisor exists and belongs to this admin (backward compatibility)
+        supervisor = User.get_by_id(supervisor_id)
+        if not supervisor:
+            return error_response('Supervisor not found', 404)
+        
+        supervisor_admin_id = supervisor.get('admin_id')
+        if supervisor_admin_id and str(supervisor_admin_id) != str(session['user_id']):
+            return error_response('Supervisor not found or access denied', 404)
         
         success = Zone.assign_supervisor(zone_id, supervisor_id)
         if not success:

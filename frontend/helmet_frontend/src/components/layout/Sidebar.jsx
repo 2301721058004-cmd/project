@@ -9,7 +9,6 @@ import {
   AlertTriangle,
   Image as ImageIcon,
   Search,
-  ClipboardList,
   Activity,
   Database,
   ChevronRight,
@@ -37,7 +36,6 @@ const SUPERVISOR_LINKS = [
   { to: '/supervisor/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/supervisor/zones', label: 'My Zones', icon: MapPin },
   { to: '/supervisor/gallery', label: 'Gallery', icon: ImageIcon },
-  { to: '/supervisor/history', label: 'History', icon: ClipboardList },
   { to: '/supervisor/about', label: 'About', icon: Info },
   { to: '/supervisor/faq', label: 'FAQ', icon: HelpCircle },
 ];
