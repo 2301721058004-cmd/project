@@ -303,14 +303,14 @@ export function ManageSupervisors() {
                           onClick={() => handleEdit(supervisor)}
                           className="px-3 py-1 text-xs"
                         >
-                          ✏️ Edit
+                           Edit
                         </Button>
                         <Button
                           variant="danger"
                           onClick={() => handleDelete(supervisor.id, supervisor.full_name)}
                           className="px-3 py-1 text-xs"
                         >
-                          🗑️ Delete
+                          Delete
                         </Button>
                       </td>
                     </tr>
