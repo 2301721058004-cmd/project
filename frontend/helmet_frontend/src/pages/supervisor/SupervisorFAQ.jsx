@@ -7,16 +7,8 @@ export function SupervisorFAQ() {
 
   const faqs = [
     {
-      question: 'How do I upload images or videos for detection?',
-      answer: 'Go to the Detection section, click "Select File" or drag and drop an image or video. Choose your assigned zone from the dropdown, then click "Detect Helmets". The AI will analyze the file and show results within seconds.'
-    },
-    {
       question: 'What file formats are supported?',
       answer: 'The system supports common image formats (JPG, PNG, etc.) and video formats (MP4, AVI, MOV, etc.). Maximum file size is 500MB. For best results, ensure good lighting and clear visibility of workers.'
-    },
-    {
-      question: 'How are violations reported?',
-      answer: 'When the system detects violations, they are automatically recorded with timestamps and images. You can view them in the History section with full details about the violation location and the workers involved.'
     },
     {
       question: 'Can I see violation history?',
@@ -27,24 +19,8 @@ export function SupervisorFAQ() {
       answer: 'Visit the "My Zones" section to see all zones assigned to you by your admin. You can view zone details, assigned cameras, and access violation records for each zone.'
     },
     {
-      question: 'What does the Gallery section show?',
-      answer: 'The Gallery shows all images and videos you\'ve uploaded along with their detection results. You can organize them by date, zone, or violation status for easy reference.'
-    },
-    {
       question: 'How long are detection results stored?',
       answer: 'Detection results and violation history are stored indefinitely on our secure servers unless your admin deletes them. You can export historical data anytime for your records.'
-    },
-    {
-      question: 'Can I share reports with my admin?',
-      answer: 'Yes, your admin can see all violations and reports from your assigned zones in their dashboard. Additionally, you can export reports in PDF or CSV format and share them separately.'
-    },
-    {
-      question: 'What should I do if I see a false positive?',
-      answer: 'If the system incorrectly flags a violation, you can report it. This helps improve the AI model. Contact your admin or support team with details about the false positive.'
-    },
-    {
-      question: 'How do I reset my password?',
-      answer: 'Go to Settings and look for the Security section. You can change your password anytime. If you forget your password, use the "Forgot Password" option on the login page to reset it via email.'
     }
   ];
 

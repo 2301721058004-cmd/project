@@ -8,7 +8,7 @@ export function AdminFAQ() {
   const faqs = [
     {
       question: 'How does the AI helmet detection system work?',
-      answer: 'Our system uses YOLOv8, a state-of-the-art deep learning model trained to detect safety helmets. It analyzes images and videos in real-time to identify workers and determine if they are wearing helmets. The system achieved 99% accuracy in controlled tests.'
+      answer: 'Our system uses YOLOv8, a state-of-the-art deep learning model trained to detect safety helmets. It analyzes images and videos in real-time to identify workers and determine if they are wearing helmets. The system achieved 90% accuracy in controlled tests.'
     },
     {
       question: 'How many cameras can I connect to the system?',
